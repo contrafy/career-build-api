@@ -1,62 +1,77 @@
 import os
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Mapping
 
 import requests
 from dotenv import load_dotenv
 
 load_dotenv()
 RAPIDAPI_KEY = os.getenv("RAPIDAPI_KEY")
-
 if not RAPIDAPI_KEY:
-    raise RuntimeError("RAPIDAPI_KEY missing in environment or .env file")
+    raise RuntimeError("RAPIDAPI_KEY missing in environment/.env")
 
 COMMON_HEADERS = {"x-rapidapi-key": RAPIDAPI_KEY}
 
 
-def fetch_internships(
-    *,
-    title_filter: Optional[str] = None,
-    location_filter: Optional[str] = None,
-    description_filter: Optional[str] = None,
-    description_type: str = "text",
-) -> dict[str, Any]:
-    url = "https://internships-api.p.rapidapi.com/active-jb-7d"
-    headers = {**COMMON_HEADERS, "x-rapidapi-host": "internships-api.p.rapidapi.com"}
+# ---------- internal helpers -------------------------------------------------
 
-    params: Dict[str, str] = {"description_type": description_type}
-    if title_filter:
-        params["title_filter"] = title_filter
-    if location_filter:
-        params["location_filter"] = location_filter
-    if description_filter:
-        params["description_filter"] = description_filter
 
-    resp = requests.get(url, headers=headers, params=params, timeout=10)
+def _sanitize_params(params: Mapping[str, Any]) -> Dict[str, str]:
+    """
+    • Drop keys with empty value
+    • Convert bool → 'true'/'false'
+    • Convert everything else to str
+    """
+    clean: Dict[str, str] = {}
+    for k, v in params.items():
+        if v is None or v == "":
+            continue
+        if isinstance(v, bool):
+            clean[k] = "true" if v else "false"
+        else:
+            clean[k] = str(v)
+    return clean
+
+
+def _call_api(url: str, host: str, params: Mapping[str, Any]) -> dict:
+    headers = {**COMMON_HEADERS, "x-rapidapi-host": host}
+    query = _sanitize_params(params)
+    resp = requests.get(url, headers=headers, params=query, timeout=15)
     resp.raise_for_status()
     return resp.json()
 
 
-def fetch_jobs(
-    *,
-    title_filter: Optional[str] = None,
-    location_filter: Optional[str] = None,
-    limit: Optional[int] = None,
-    offset: Optional[int] = None,
-    description_type: str = "text",
-) -> dict[str, Any]:
-    url = "https://active-jobs-db.p.rapidapi.com/active-ats-7d"
-    headers = {**COMMON_HEADERS, "x-rapidapi-host": "active-jobs-db.p.rapidapi.com"}
+# ---------- public wrappers ---------------------------------------------------
 
-    params: Dict[str, str] = {"description_type": description_type}
-    if title_filter:
-        params["title_filter"] = title_filter
-    if location_filter:
-        params["location_filter"] = location_filter
-    if limit is not None:
-        params["limit"] = str(limit)
-    if offset is not None:
-        params["offset"] = str(offset)
 
-    resp = requests.get(url, headers=headers, params=params, timeout=10)
-    resp.raise_for_status()
-    return resp.json()
+def fetch_internships(params: Mapping[str, Any]) -> dict:
+    """
+    RapidAPI: internships‑api  (active‑jb‑7d)
+    Pass any documented param through.
+    """
+    return _call_api(
+        "https://internships-api.p.rapidapi.com/active-jb-7d",
+        "internships-api.p.rapidapi.com",
+        params,
+    )
+
+
+def fetch_jobs(params: Mapping[str, Any]) -> dict:
+    """
+    RapidAPI: active‑jobs‑db  (active‑ats‑7d)
+    """
+    return _call_api(
+        "https://active-jobs-db.p.rapidapi.com/active-ats-7d",
+        "active-jobs-db.p.rapidapi.com",
+        params,
+    )
+
+
+def fetch_yc_jobs(params: Mapping[str, Any]) -> dict:
+    """
+    RapidAPI: free‑y‑combinator‑jobs‑api  (active‑jb‑7d)
+    """
+    return _call_api(
+        "https://free-y-combinator-jobs-api.p.rapidapi.com/active-jb-7d",
+        "free-y-combinator-jobs-api.p.rapidapi.com",
+        params,
+    )

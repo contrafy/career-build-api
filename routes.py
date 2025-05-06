@@ -1,6 +1,4 @@
-from typing import Optional
-
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Request
 
 import helpers
 
@@ -8,42 +6,35 @@ router = APIRouter()
 
 
 @router.get("/fetch_internships")
-def fetch_internships(
-    title: Optional[str] = Query(None, alias="title"),
-    location: Optional[str] = Query(None, alias="location"),
-    description: Optional[str] = Query(None, alias="description"),
-):
+async def fetch_internships(request: Request):
     """
-    Forward query params to RapidAPI internships endpoint.
-    All params are optional.
+    Pass *all* query‑string keys straight through to the internships endpoint.
+    Every parameter in the RapidAPI docs is accepted.
     """
     try:
-        return helpers.fetch_internships(
-            title_filter=title,
-            location_filter=location,
-            description_filter=description,
-        )
+        return helpers.fetch_internships(dict(request.query_params))
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
 
 
 @router.get("/fetch_jobs")
-def fetch_jobs(
-    title: Optional[str] = Query(None, alias="title"),
-    location: Optional[str] = Query(None, alias="location"),
-    limit: Optional[int] = None,
-    offset: Optional[int] = None,
-):
+async def fetch_jobs(request: Request):
     """
-    Forward query params to RapidAPI active‑jobs endpoint.
-    All params are optional.
+    Forward any query params to the active‑jobs endpoint (ATS feeds).
+    Accepts every param listed in the docs.
     """
     try:
-        return helpers.fetch_jobs(
-            title_filter=title,
-            location_filter=location,
-            limit=limit,
-            offset=offset,
-        )
+        return helpers.fetch_jobs(dict(request.query_params))
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
+@router.get("/fetch_yc_jobs")
+async def fetch_yc_jobs(request: Request):
+    """
+    Forward any query params to the YC‑Jobs endpoint.
+    """
+    try:
+        return helpers.fetch_yc_jobs(dict(request.query_params))
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
