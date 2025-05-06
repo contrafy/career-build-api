@@ -1,0 +1,990 @@
+[
+    {
+        "id": "1629766845",
+        "date_posted": "2025-05-06T18:11:08",
+        "date_created": "2025-05-06T19:24:48.632383",
+        "title": "Student Worker (m/f/d) Data Science",
+        "organization": "Danfoss",
+        "organization_url": "https://www.linkedin.com/company/danfoss",
+        "date_validthrough": "2025-06-05T18:11:08",
+        "locations_raw": [
+            {
+                "@type": "Place",
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressCountry": "DE",
+                    "addressLocality": "Hamburgo",
+                    "addressRegion": null,
+                    "streetAddress": null
+                },
+                "latitude": 53.557255,
+                "longitude": 9.995966
+            }
+        ],
+        "location_type": null,
+        "location_requirements_raw": null,
+        "salary_raw": null,
+        "employment_type": [
+            "INTERN"
+        ],
+        "url": "https://de.linkedin.com/jobs/view/student-worker-m-f-d-data-science-at-danfoss-4224571021",
+        "source_type": "jobboard",
+        "source": "linkedin",
+        "source_domain": "de.linkedin.com",
+        "organization_logo": "https://media.licdn.com/dms/image/v2/D4E0BAQEOrvJdVu_u-g/company-logo_200_200/B4EZagnEhAHIAI-/0/1746451319203/danfoss_logo?e=2147483647&v=beta&t=bF9N9AVAXxbI9lK1dcRvG2fDldPAKRVnfEQ0j7malLM",
+        "cities_derived": [
+            "Novo Hamburgo"
+        ],
+        "regions_derived": [
+            "Rio Grande do Sul"
+        ],
+        "countries_derived": [
+            "Brazil"
+        ],
+        "locations_derived": [
+            "Novo Hamburgo, Rio Grande do Sul, Brazil"
+        ],
+        "timezones_derived": [
+            "America/Sao_Paulo"
+        ],
+        "lats_derived": [
+            -29.6778
+        ],
+        "lngs_derived": [
+            -51.1308
+        ],
+        "remote_derived": false,
+        "recruiter_name": null,
+        "recruiter_title": null,
+        "recruiter_url": null,
+        "linkedin_org_employees": 21893,
+        "linkedin_org_url": "http://www.danfoss.com",
+        "linkedin_org_size": "10,001+ employees",
+        "linkedin_org_slogan": "We engineer a better future.",
+        "linkedin_org_industry": "Industrial Machinery Manufacturing",
+        "linkedin_org_followers": null,
+        "linkedin_org_headquarters": "Nordborg",
+        "linkedin_org_type": "Privately Held",
+        "linkedin_org_foundeddate": "",
+        "linkedin_org_specialties": [
+            "Compressors & Controls",
+            "Solar Inverters",
+            "Engineering",
+            "Technology",
+            "Frequency Converters",
+            "Industrial Automation",
+            "Innovation",
+            "Energy Efficiency",
+            "District Energy",
+            "Powering mobile machinery",
+            "Climate Solutions",
+            "Electrification",
+            "Power Solutions",
+            "Drives",
+            "and Decabonization"
+        ],
+        "linkedin_org_locations": [
+            "Nordborgvej 81, Nordborg, 6430, DK",
+            "2800 E 13th St, Ames, IA 50010, US",
+            "Krokamp 35, Neumunster, SH 24539, DE",
+            "Via Energy Park, Vimercate, Lombardy 20871, IT",
+            "Autumn Rd, Sandton, Gauteng 2191, ZA",
+            "Calle de la Calendula, 93, Alcobendas, Community of Madrid 28109, ES",
+            "25 International Business Park, Singapore, Singapore 609916, SG",
+            "Amaliegade 3, Kobenhavn K, Capital Region 1256, DK",
+            "3A International Business Park, Singapore, Singapore 609935, SG"
+        ],
+        "linkedin_org_description": "Danfoss engineers solutions that increase machine productivity, lower energy consumption, enable electrification, and reduce emissions.\n\nOur solutions are used in areas such as refrigeration, air conditioning, heating, power conversion, motor control, industrial machinery, automotive, marine, and on- and off-highway equipment. We also provide solutions for renewable energy, such as solar and wind power, Power-to-X, heat recovery, as well as contribute to district-energy solutions for cities.\n\nOur innovative engineering dates back to 1933. Danfoss is family-owned and employs over 39,000 people. We create long-term value for our customers in more than 100 countries with a global footprint of around 100 factories.\n\nFollow us on Instagram, Twitter and Facebook:\nwww.instagram.com/danfoss_group\nwww.twitter.com/Danfoss\nwww.facebook.com/Danfoss",
+        "linkedin_org_recruitment_agency_derived": false,
+        "seniority": "Pr\u00e1cticas",
+        "directapply": false,
+        "linkedin_org_slug": "danfoss",
+        "description_text": "Job Description\nWould you like to take on a role where your ideas and input contributes to reveal energy optimization potentials with help of system simulation? For our Hamburg office, located directly in the Hafencity, we are looking for a Student Worker (m/f/d) Data Science to join our international Virtual System Solutions department. In this position, you will support the team in developing AI models for optimizing workflows as well as HVAC systems within the Virtual System Solutions team (ca. 20h/week).\n\nJob Responsibilities\nYour Tasks In This Role Will Include\nLearn about state-of-the-art real-time modeling applications \nConduct feasibility studies to establish proof of concept for various AI use cases \nDevelop proficiency in data analysis through active participation in data collection, preparation, and analysis \nCollaborate closely with colleagues on projects and engage in a diverse array of tasks within an agile development environment \n\nBackground & Skills\nFor This Position, You Are a Student Of An Engineering-related Subject (Data Analytics Science, Data Engineering, Software Engineering, Process/Energy Engineering, Computer Science) Or a Comparable Degree. In Addition, We Are Looking For\n\nInterest in future sustainable and artificial intelligence technologies \nProgramming skills in Python \nExperience with common machine learning frameworks (e.g. TensorFlow, PyTorch, Scikit-Learn) or comparable tools are beneficial. \nBasic knowledge of thermodynamics and heat transfer is a plus \nFact-oriented, open-minded person with good communication skills \nFluent English skills required \nWorking 1-2 days (maximum 20 hours/week) from the Hamburg office is mandatory \n\nAt Danfoss, we believe that a diverse and inclusive workplace fosters creativity, innovation, and a broader perspective in decision-making. When you consider this job posting, do you feel like your profile is not a perfect match? Numerous studies have found that women and people of color are more likely to apply only when they meet all requirements listed in the job posting. Even if you do not check all the boxes, we encourage you to apply anyway. We are curious to find out how you can bring new insights to the role or to Danfoss as an organization.\n\nFor more details on this position, contact Catharina Cuerten, Senior Talent Acquisition Partner, at +4969 8902 107.\n\nEmployee Benefits\nWe are excited to offer you the following benefits with your employment:\n\nFlexible working hours \nPossibility to work remotely \nOpportunity to join Employee Resource Groups \nState of the art virtual work environment \nEmployee Referral Program \n\nThis list does not promise or guarantee any particular benefit or specific action. They may depend on country or contract specifics and are subject to change at any time without prior notice.\n\nDanfoss \u2013 Engineering Tomorrow\nAt Danfoss, we are engineering solutions that allow the world to use resources in smarter ways - driving the sustainable transformation of tomorrow. No transformation has ever been started without a group of passionate, dedicated and empowered people. We believe that innovation and great results are driven by the right mix of people with diverse backgrounds, personalities, skills, and perspectives, reflecting the world in which we do business. To make sure the mix of people works, we strive to create an inclusive work environment where people of all backgrounds are treated equally, respected, and valued for who they are. It is a strong priority within Danfoss to improve the health, working environment and safety of our employees.\n\nFollowing our founder\u2019s mindset \u201caction speaks louder than words\u201d, we set ourselves ambitious targets to protect the environment by embarking on a plan to become CO2 neutral latest by 2030.\n\nAll qualified applicants will receive consideration for employment without regard to race, color, religion, sex, sexual orientation, gender identity, national origin, age, disability, veteran status, or other protected category."
+    },
+    {
+        "id": "1629033788",
+        "date_posted": "2025-05-06T13:57:26",
+        "date_created": "2025-05-06T14:36:34.126272",
+        "title": "Data science intern",
+        "organization": "EVERSANA",
+        "organization_url": "https://www.linkedin.com/company/eversana",
+        "date_validthrough": "2025-11-02T13:52:05",
+        "locations_raw": [
+            {
+                "@type": "Place",
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressCountry": "IN",
+                    "addressLocality": "Bengaluru",
+                    "addressRegion": null,
+                    "streetAddress": null
+                },
+                "latitude": 12.976747,
+                "longitude": 77.57528
+            }
+        ],
+        "location_type": null,
+        "location_requirements_raw": null,
+        "salary_raw": null,
+        "employment_type": [
+            "INTERN"
+        ],
+        "url": "https://in.linkedin.com/jobs/view/data-science-intern-at-eversana-4222830764",
+        "source_type": "jobboard",
+        "source": "linkedin",
+        "source_domain": "in.linkedin.com",
+        "organization_logo": "https://media.licdn.com/dms/image/v2/C4E0BAQFMUs9_RUQvSQ/company-logo_200_200/company-logo_200_200/0/1630596717757/eversana_logo?e=2147483647&v=beta&t=CfIVEuoi5vfYUhIx-Y9zJsjuyuzJUA-_x6fn0j3HH9c",
+        "cities_derived": [
+            "Bangalore"
+        ],
+        "regions_derived": [
+            "Karn\u0101taka"
+        ],
+        "countries_derived": [
+            "India"
+        ],
+        "locations_derived": [
+            "Bangalore, Karn\u0101taka, India"
+        ],
+        "timezones_derived": [
+            "Asia/Kolkata"
+        ],
+        "lats_derived": [
+            12.9789
+        ],
+        "lngs_derived": [
+            77.5917
+        ],
+        "remote_derived": false,
+        "recruiter_name": null,
+        "recruiter_title": null,
+        "recruiter_url": null,
+        "linkedin_org_employees": 4603,
+        "linkedin_org_url": "http://eversana.com",
+        "linkedin_org_size": "5,001-10,000 employees",
+        "linkedin_org_slogan": null,
+        "linkedin_org_industry": "Pharmaceutical Manufacturing",
+        "linkedin_org_followers": 528668,
+        "linkedin_org_headquarters": "Chicago, IL",
+        "linkedin_org_type": "Privately Held",
+        "linkedin_org_foundeddate": "",
+        "linkedin_org_specialties": [
+            "Regulatory",
+            "Management & Specialty Consulting",
+            "Research & Insights",
+            "Global Pricing Strategies",
+            "Patient",
+            "Payer & Provider Marketing Services",
+            "Field Medical",
+            "Market Access & Sales ",
+            "Global Channel Management & 3PL",
+            "Specialty Pharmacy & In-Home Nursing",
+            "HUB & Adherence Solutions",
+            "Affordability Programs",
+            "Medical Communications & Pharmacovigilance",
+            "Revenue Management",
+            "Digital Strategies & Therapy Transformation",
+            "Patient Analytics Services",
+            "Integrated Patient-Level Data",
+            "Commercial Analytics Platform",
+            "RWE & HEOR Global Services",
+            "Global Launch Expertise",
+            "and Payer Reimbursement Strategies"
+        ],
+        "linkedin_org_locations": [
+            "205 N Michigan Ave, 3200, Chicago, IL 60601, US",
+            "4550 S Mendenhall Rd, Memphis, Tennessee, US",
+            "10877 Commerce Way, Fontana, California 92337, US",
+            "17877 Chesterfield Airport Rd, Chesterfield, Missouri, US",
+            "790 Township Line Road, Yardley, PA 19067, US",
+            "469 7th Avenue, 10th Floor, New York, NY 10018, US",
+            "4225 Executive Sq, San Diego, California 92121, US",
+            "8990 Duke Blvd, Mason, Ohio 45040, US",
+            "204-3228 S Service Rd, Burlington, Ontario, CA",
+            "Bengaluru, IN",
+            "Dublin, IE",
+            "6 Kean Street, 5th Floor, London,  WC2B 4AS, GB",
+            "AP81, 83, N Main Rd, near Hard Rock Cafe, 7th Floor, Mundhwa, Pune, Maharashtra 411036, IN",
+            "Shanghai, CN",
+            "Singapore, 059818, SG",
+            "99 Summer Street, Suite 1600, Boston , MA 02120, US",
+            "204, 2nd Floor, Winchester Building, One South Avenue, Hiranandani Gardens,, Mumbai, Powai 400076, IN",
+            "7045 College Blvd, Overland Park, Kansas 66211, US",
+            "219 Duffering Street, 207B and 210B, Toronto, ON M6K3J1, CA",
+            "2001 Lakeshore Dr, Mandeville, Louisiana 70448, US",
+            "92 Congress Street, Saratoga Springs, NY 12866, US",
+            "1207 Sanno Park Tower, 2-11-1 Nagatacho, Chiyoda-ku, Tokyo, 100-6112, JP",
+            "B-301 3rd Floor B Wing Felxcel Park, S. V. Road next to 24 Karat Multiplex Jogeshwari (W), Mumbai, Maharashtra 400102, IN",
+            "Schinkelplatz 5, Berlin, BE 10117, DE",
+            "5650 Challenge Dr, Memphis, Tennessee 38115, US",
+            "It\u00e4merenkatu 1, Helsinki, Uusimaa 00180, FI",
+            "Via San Marco 21, Milan, 20121, IT",
+            "146 Arthur Street, Suite 902, Level 9, North Sydney, NSW 2060, AU",
+            "Copernico Repubblica, Via Antonio Salandra, 13, Rome, 00187, IT",
+            "Palazzo Innovazione, Piazza Abate Conforti, Salerno, 84121 S, IT"
+        ],
+        "linkedin_org_description": "EVERSANA\u00ae is a leading independent provider of global services to the life sciences industry. The company\u2019s integrated solutions are rooted in the patient experience and span all stages of the product life cycle to deliver long-term, sustainable value for patients, prescribers, channel partners and payers. The company serves more than 650 organizations, including innovative start-ups and established pharmaceutical companies, to advance life sciences solutions for a healthier world. To learn more about EVERSANA, visit eversana.com. ",
+        "linkedin_org_recruitment_agency_derived": false,
+        "seniority": "Entry level",
+        "directapply": true,
+        "linkedin_org_slug": "eversana",
+        "description_text": "At EVERSANA, we are proud to be certified as a Great Place to Work across the globe. We\u2019re fueled by our vision to create a healthier world. How? Our global team of more than 7,000 employees is committed to creating and delivering next-generation commercialization services to the life sciences industry. We are grounded in our cultural beliefs and serve more than 650 clients ranging from innovative biotech start-ups to established pharmaceutical companies. Our products, services and solutions help bring innovative therapies to market and support the patients who depend on them. Our jobs, skills and talents are unique, but together we make an impact every day. Join us!\n\nAcross our growing organization, we embrace diversity in backgrounds and experiences. Improving patient lives around the world is a priority, and we need people from all backgrounds and swaths of life to help build the future of the healthcare and the life sciences industry. We believe our people make all the difference in cultivating an inclusive culture that embraces our cultural beliefs. We are deliberate and self-reflective about the kind of team and culture we are building. We look for team members that are not only strong in their own aptitudes but also who care deeply about EVERSANA, our people, clients and most importantly, the patients we serve. We are EVERSANA.\n\nJob Description\n\nLearn to develop and apply data mining and machine learning techniques and models to extract analytic insights from healthcare and non-healthcare data sets \nSupport the review, generation, and delivery of analytic products in support of project work, RFP responses and other business needs\nAssist in the development of visualizations and presentations for client deliverables\nDevelop software solutions and applications using Python, SQL, and/or R\nInterface with EVERSANA analysts, data scientists, clinicians and program managers and with EVERSANA customers.\n\nQualifications\n\nEducation - BS/MS/PhD degree in Engineering, Computer Science, Mathematics, Bioinformatics, Physics\nPractical knowledge of statistics, statistical inference, and machine learning algorithms\nWorks independently and is a self-starter\nMS PowerPoint presentation development skills\nClient interface and presentation skills\nKnowledge of one or more of the following programming and analysis tools:\nPython (pandas, scikit-learn, Numpy, Scipy, and database access packages)\nSQL / (MySQL)\nAWS (Redshift)\nMicrosoft Excel\nR programming language\nVisualization tools\nLinux (Red Hat, CentOS); Python and software development in a Linux environment\nAdditional Information\n\nOUR CULTURAL BELIEFS:\n\nPatient Minded I act with the patient\u2019s best interest in mind.\n\nClient Delight I own every client experience and its impact on results.\n\nTake Action I am empowered and empower others to act now.\n\nGrow Talent I own my development and invest in the development of others.\n\nWin Together I passionately connect with anyone, anywhere, anytime to achieve results.\n\nCommunication Matters I speak up to create transparent, thoughtful and timely dialogue.\n\nEmbrace Diversity I create an environment of awareness and respect.\n\nAlways Innovate I am bold and creative in everything I do.\n\nEVERSANA is committed to providing competitive salaries and benefits for all employees. The anticipated base salary range for this position is $47,000 to $75,000 and is not applicable to locations outside of the U.S. The base salary range represents the low and high end of the salary range for this position. Compensation will be determined based on relevant experience, other job-related qualifications/skills, and geographic location (to account for comparative cost of living). EVERSANA reserves the right to modify this base salary range at any time.\n\nOur team is aware of recent fraudulent job offers in the market, misrepresenting EVERSANA. Recruitment fraud is a sophisticated scam commonly perpetrated through online services using fake websites, unsolicited e-mails, or even text messages claiming to be a legitimate company. Some of these scams request personal information and even payment for training or job application fees. Please know EVERSANA would never require personal information nor payment of any kind during the employment process. We respect the personal rights of all candidates looking to explore careers at EVERSANA.\n\nFrom EVERSANA\u2019s inception, Diversity, Equity & Inclusion have always been key to our success. We are an Equal Opportunity Employer, and our employees are people with different strengths, experiences, and backgrounds who share a passion for improving the lives of patients and leading innovation within the healthcare industry. Diversity not only includes race and gender identity, but also age, disability status, veteran status, sexual orientation, religion, and many other parts of one\u2019s identity. All of our employees\u2019 points of view are key to our success, and inclusion is everyone's responsibility.\n\nFollow us on LinkedIn | Twitter"
+    },
+    {
+        "id": "1629056525",
+        "date_posted": "2025-05-06T13:51:39",
+        "date_created": "2025-05-06T14:44:37.947437",
+        "title": "EY GDS Internship Program - Junior Data Science",
+        "organization": "EY",
+        "organization_url": "https://www.linkedin.com/company/ernstandyoung",
+        "date_validthrough": "2025-06-05T13:51:39",
+        "locations_raw": [
+            {
+                "@type": "Place",
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressCountry": "PL",
+                    "addressLocality": "Wroc\u0142aw",
+                    "addressRegion": null,
+                    "streetAddress": null
+                },
+                "latitude": 51.096935,
+                "longitude": 17.038652
+            }
+        ],
+        "location_type": null,
+        "location_requirements_raw": null,
+        "salary_raw": null,
+        "employment_type": [
+            "INTERN"
+        ],
+        "url": "https://pl.linkedin.com/jobs/view/ey-gds-internship-program-junior-data-science-at-ey-4222828706",
+        "source_type": "jobboard",
+        "source": "linkedin",
+        "source_domain": "pl.linkedin.com",
+        "organization_logo": "https://media.licdn.com/dms/image/v2/C510BAQGpRhkpxp5A9A/company-logo_200_200/company-logo_200_200/0/1630570672166/ernstandyoung_logo?e=2147483647&v=beta&t=JIcVOHSv0_Vs4OJIm_dclzACTmFL5-wIcP2BXBKKlzc",
+        "cities_derived": [
+            "Wroc\u0142aw"
+        ],
+        "regions_derived": [
+            "Dolno\u015bl\u0105skie"
+        ],
+        "countries_derived": [
+            "Poland"
+        ],
+        "locations_derived": [
+            "Wroc\u0142aw, Dolno\u015bl\u0105skie, Poland"
+        ],
+        "timezones_derived": [
+            "Europe/Warsaw"
+        ],
+        "lats_derived": [
+            51.11
+        ],
+        "lngs_derived": [
+            17.0325
+        ],
+        "remote_derived": false,
+        "recruiter_name": null,
+        "recruiter_title": null,
+        "recruiter_url": null,
+        "linkedin_org_employees": 366419,
+        "linkedin_org_url": "http://www.ey.com",
+        "linkedin_org_size": "10,001+ employees",
+        "linkedin_org_slogan": null,
+        "linkedin_org_industry": "Professional Services",
+        "linkedin_org_followers": null,
+        "linkedin_org_headquarters": "London",
+        "linkedin_org_type": "Privately Held",
+        "linkedin_org_foundeddate": "",
+        "linkedin_org_specialties": [
+            "Advisory",
+            "Assurance",
+            "Tax",
+            "Transactions",
+            "Audit",
+            "Mergers",
+            "M&A",
+            "Financial Services",
+            "Accounting",
+            "Professional Services",
+            "Law",
+            "Technology",
+            "Consulting",
+            "Data",
+            "Transformation",
+            "Strategy",
+            "Legal",
+            "Digital transformation",
+            "Legal",
+            "Growth",
+            "and Managed Services"
+        ],
+        "linkedin_org_locations": [
+            "6 More London Place, London, SE1 2DA, GB",
+            "Avenida Presidente Juscelino Kubitschek, 1909, North Tower | 6th to 10th floor, S\u00e3o Paulo, SP 04543-011, BR",
+            "Level 16, Ernst & Young Tower, Oriental Plaza, No. 1 East Chang An Avenue, Dong Cheng District, Beijing, 100738, CN",
+            "5 Times Square, New York, New York, 10036-6530, US",
+            "1 More London Place, London, London, SE1 2AF, GB",
+            "Level 23A, Menara Milenium, Jalan Damanlela, Kuala Lumpur, Pusat Bandar Damansara 50490, MY",
+            "Calle de Raimundo Fernandez, Villaverde 65, Madrid, Torre Azca 28003, ES",
+            "The EY Centre, Level 34, 200 George St, Sydney, NSW 2000, AU",
+            "100 Willis St, Wellington, Wellington 6011, NZ",
+            "EY Tower, 100 Adelaide Street West, Toronto, Ontario M5H 0B3, CA",
+            "2 Avenue Hoche, Paris, IdF 75008, FR",
+            "Via Meravigli, 12/14, Milan, Lomb. 20123, IT",
+            "8B Chimarras Str.,, Marousi, Attica 151 25, GR",
+            "Radnicka cesta 50, Zagreb, Zagreb 10000, HR",
+            "33rd Floor, Lake Rajada Office Complex, 193/136-137 Rajadapisek Road, Bangkok, Klongtoey 10110, TH",
+            "3rd & 6th Floor, Wing A & B,Worldmark-1, Aero city, IGI Airport Hospitality District, Opp. Holiday Inn, New Delhi, Mahipalpur 110037 , IN",
+            "Rondo ONZ 1,, Warszawa, Warszawa 00-124, PL",
+            "Harcourt Street, Dublin, County Dublin, IE",
+            "155 N Wacker Dr, Chicago, IL 60606, US",
+            "ulica Rzeznicza 32/33, Wroclaw, DS 50-130, PL",
+            "1 Tim Mei Ave, Central & Western, Hong Kong, HK",
+            "De Kleetlaan 2B, Machelen, Flemish Region 1831, BE",
+            "25 de Mayo 487, Buenos Aires City, Buenos Aires Autonomous City 1002, AR"
+        ],
+        "linkedin_org_description": "EY is building a better working world by creating new value for clients, people, society, the planet, while building trust in the capital markets.\n\nEnabled by data, AI and advanced technology, EY teams help clients shape the future with confidence and develop answers for the most pressing issues of today and tomorrow.\n\nEY teams in more than 150 countries work across a full spectrum of services in assurance, consulting, tax, strategy and transactions, strengthened by sector experience and diverse ecosystem partners.\n \nFind out more about the EY global network: http://ey.com/en_gl/legal-statement",
+        "linkedin_org_recruitment_agency_derived": false,
+        "seniority": "Entry level",
+        "directapply": false,
+        "linkedin_org_slug": "ernstandyoung",
+        "description_text": "Location: Wroc\u0142aw / Warsaw\n\nHybrid model: 4 days office/1 day remote\n\nLet us introduce you the job offer by EY GDS Poland \u2013 a member of the global integrated service delivery center network by EY.\n\nThe opportunity\n\nWith a constant growth of our business and customers\u2019 needs we are willing to move our projects on the new track. We are able to offer you a Junior Data Science with an intensive training program. You will use the most advanced technology stack and you will have an opportunity to implement new solutions. You will work with the most recognized and influential players on the IT/financial markets on challenging projects.\n\nTo qualify for the role, you must have\n\nGood English (verbal and written) \nExperience in Python (Object Oriented Programming will be plus)\nData Science Skills - Data Cleaning, Processing, Pandas, Scikit-Learn\nBeing familiar with one of the models frameworks: XGBoost, LightGBM, Neural Networks (Pytorch or Tensorflow), GenAI\nNatural Language Processing skills would be very welcome\n\nWhat We Look For\n\nWe love working with people who are passionate about their job and have great interpersonal skills, who are ready to face new professional challenges. Are you a person with a good sense of humor and open to significantly extend your skillset? If yes, it\u2019s a role for you.\n\nWhat Working At EY Offers\n\nEY Global Delivery Services (GDS) is a dynamic and truly global delivery network. We work across nine locations \u2013 Argentina, Hungary, India, the Philippines, Poland, Sri Lanka, Mexico, Spain and the United Kingdom \u2013 and with teams from all EY service lines, geographies and sectors, playing a vital role in the delivery of the EY growth strategy. From accountants to coders to advisory consultants, we offer a wide variety of fulfilling career opportunities that span all business disciplines. In GDS, you will collaborate with EY teams on exciting projects and work with well-known brands from across the globe. We\u2019ll introduce you to an ever-expanding ecosystem of people, learning, skills and insights that will stay with you throughout your career. Plus we offer:\n\nFull-time paid internship that will last 3 months.\nConstant gross salary based on an Internship Agreement.\nHybrid work model: 4 days in the office (Wroclaw/Warsaw) and 1 day of remote work (Home Office \u2013 Warsaw/Wroclaw).\nOpportunity to develop technical and non-technical skills in global environment.\nSupport, coaching and feedback from some of the most engaging colleagues and managers.\nVariety of platforms for upskilling including not limited access to Udemy for business and on-site trainings.\nFlexible full time working hours with respect to your work life balance.\nOpportunity to extend the contract after completing the internship. \n\nIf you can confidently demonstrate that you meet the criteria above, please contact us as soon as possible.\n\nJoin Internship Program at EY GDS Poland. Join us in building a better working world. \n\nIn compliance with the requirements of the Whistleblower Protection Act, our company has established the Procedure for reporting breaches of law and undertaking appropriate follow-up actions. Any misconduct should be reported through the EY Ethics Hotline."
+    },
+    {
+        "id": "1629056602",
+        "date_posted": "2025-05-06T13:51:38",
+        "date_created": "2025-05-06T14:44:39.160142",
+        "title": "EY GDS Internship Program - Junior Data Science",
+        "organization": "EY",
+        "organization_url": "https://www.linkedin.com/company/ernstandyoung",
+        "date_validthrough": "2025-06-05T13:51:38",
+        "locations_raw": [
+            {
+                "@type": "Place",
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressCountry": "PL",
+                    "addressLocality": "Warsaw",
+                    "addressRegion": null,
+                    "streetAddress": null
+                },
+                "latitude": 52.234978,
+                "longitude": 21.008492
+            }
+        ],
+        "location_type": null,
+        "location_requirements_raw": null,
+        "salary_raw": null,
+        "employment_type": [
+            "INTERN"
+        ],
+        "url": "https://pl.linkedin.com/jobs/view/ey-gds-internship-program-junior-data-science-at-ey-4222833211",
+        "source_type": "jobboard",
+        "source": "linkedin",
+        "source_domain": "pl.linkedin.com",
+        "organization_logo": "https://media.licdn.com/dms/image/v2/C510BAQGpRhkpxp5A9A/company-logo_200_200/company-logo_200_200/0/1630570672166/ernstandyoung_logo?e=2147483647&v=beta&t=JIcVOHSv0_Vs4OJIm_dclzACTmFL5-wIcP2BXBKKlzc",
+        "cities_derived": [
+            "Warsaw"
+        ],
+        "regions_derived": [
+            "Mazowieckie"
+        ],
+        "countries_derived": [
+            "Poland"
+        ],
+        "locations_derived": [
+            "Warsaw, Mazowieckie, Poland"
+        ],
+        "timezones_derived": [
+            "Europe/Warsaw"
+        ],
+        "lats_derived": [
+            52.23
+        ],
+        "lngs_derived": [
+            21.0111
+        ],
+        "remote_derived": false,
+        "recruiter_name": null,
+        "recruiter_title": null,
+        "recruiter_url": null,
+        "linkedin_org_employees": 366419,
+        "linkedin_org_url": "http://www.ey.com",
+        "linkedin_org_size": "10,001+ employees",
+        "linkedin_org_slogan": null,
+        "linkedin_org_industry": "Professional Services",
+        "linkedin_org_followers": null,
+        "linkedin_org_headquarters": "London",
+        "linkedin_org_type": "Privately Held",
+        "linkedin_org_foundeddate": "",
+        "linkedin_org_specialties": [
+            "Advisory",
+            "Assurance",
+            "Tax",
+            "Transactions",
+            "Audit",
+            "Mergers",
+            "M&A",
+            "Financial Services",
+            "Accounting",
+            "Professional Services",
+            "Law",
+            "Technology",
+            "Consulting",
+            "Data",
+            "Transformation",
+            "Strategy",
+            "Legal",
+            "Digital transformation",
+            "Legal",
+            "Growth",
+            "and Managed Services"
+        ],
+        "linkedin_org_locations": [
+            "6 More London Place, London, SE1 2DA, GB",
+            "Avenida Presidente Juscelino Kubitschek, 1909, North Tower | 6th to 10th floor, S\u00e3o Paulo, SP 04543-011, BR",
+            "Level 16, Ernst & Young Tower, Oriental Plaza, No. 1 East Chang An Avenue, Dong Cheng District, Beijing, 100738, CN",
+            "5 Times Square, New York, New York, 10036-6530, US",
+            "1 More London Place, London, London, SE1 2AF, GB",
+            "Level 23A, Menara Milenium, Jalan Damanlela, Kuala Lumpur, Pusat Bandar Damansara 50490, MY",
+            "Calle de Raimundo Fernandez, Villaverde 65, Madrid, Torre Azca 28003, ES",
+            "The EY Centre, Level 34, 200 George St, Sydney, NSW 2000, AU",
+            "100 Willis St, Wellington, Wellington 6011, NZ",
+            "EY Tower, 100 Adelaide Street West, Toronto, Ontario M5H 0B3, CA",
+            "2 Avenue Hoche, Paris, IdF 75008, FR",
+            "Via Meravigli, 12/14, Milan, Lomb. 20123, IT",
+            "8B Chimarras Str.,, Marousi, Attica 151 25, GR",
+            "Radnicka cesta 50, Zagreb, Zagreb 10000, HR",
+            "33rd Floor, Lake Rajada Office Complex, 193/136-137 Rajadapisek Road, Bangkok, Klongtoey 10110, TH",
+            "3rd & 6th Floor, Wing A & B,Worldmark-1, Aero city, IGI Airport Hospitality District, Opp. Holiday Inn, New Delhi, Mahipalpur 110037 , IN",
+            "Rondo ONZ 1,, Warszawa, Warszawa 00-124, PL",
+            "Harcourt Street, Dublin, County Dublin, IE",
+            "155 N Wacker Dr, Chicago, IL 60606, US",
+            "ulica Rzeznicza 32/33, Wroclaw, DS 50-130, PL",
+            "1 Tim Mei Ave, Central & Western, Hong Kong, HK",
+            "De Kleetlaan 2B, Machelen, Flemish Region 1831, BE",
+            "25 de Mayo 487, Buenos Aires City, Buenos Aires Autonomous City 1002, AR"
+        ],
+        "linkedin_org_description": "EY is building a better working world by creating new value for clients, people, society, the planet, while building trust in the capital markets.\n\nEnabled by data, AI and advanced technology, EY teams help clients shape the future with confidence and develop answers for the most pressing issues of today and tomorrow.\n\nEY teams in more than 150 countries work across a full spectrum of services in assurance, consulting, tax, strategy and transactions, strengthened by sector experience and diverse ecosystem partners.\n \nFind out more about the EY global network: http://ey.com/en_gl/legal-statement",
+        "linkedin_org_recruitment_agency_derived": false,
+        "seniority": "Entry level",
+        "directapply": false,
+        "linkedin_org_slug": "ernstandyoung",
+        "description_text": "Location: Wroc\u0142aw / Warsaw\n\nHybrid model: 4 days office/1 day remote\n\nLet us introduce you the job offer by EY GDS Poland \u2013 a member of the global integrated service delivery center network by EY.\n\nThe opportunity\n\nWith a constant growth of our business and customers\u2019 needs we are willing to move our projects on the new track. We are able to offer you a Junior Data Science with an intensive training program. You will use the most advanced technology stack and you will have an opportunity to implement new solutions. You will work with the most recognized and influential players on the IT/financial markets on challenging projects.\n\nTo qualify for the role, you must have\n\nGood English (verbal and written) \nExperience in Python (Object Oriented Programming will be plus)\nData Science Skills - Data Cleaning, Processing, Pandas, Scikit-Learn\nBeing familiar with one of the models frameworks: XGBoost, LightGBM, Neural Networks (Pytorch or Tensorflow), GenAI\nNatural Language Processing skills would be very welcome\n\nWhat We Look For\n\nWe love working with people who are passionate about their job and have great interpersonal skills, who are ready to face new professional challenges. Are you a person with a good sense of humor and open to significantly extend your skillset? If yes, it\u2019s a role for you.\n\nWhat Working At EY Offers\n\nEY Global Delivery Services (GDS) is a dynamic and truly global delivery network. We work across nine locations \u2013 Argentina, Hungary, India, the Philippines, Poland, Sri Lanka, Mexico, Spain and the United Kingdom \u2013 and with teams from all EY service lines, geographies and sectors, playing a vital role in the delivery of the EY growth strategy. From accountants to coders to advisory consultants, we offer a wide variety of fulfilling career opportunities that span all business disciplines. In GDS, you will collaborate with EY teams on exciting projects and work with well-known brands from across the globe. We\u2019ll introduce you to an ever-expanding ecosystem of people, learning, skills and insights that will stay with you throughout your career. Plus we offer:\n\nFull-time paid internship that will last 3 months.\nConstant gross salary based on an Internship Agreement.\nHybrid work model: 4 days in the office (Wroclaw/Warsaw) and 1 day of remote work (Home Office \u2013 Warsaw/Wroclaw).\nOpportunity to develop technical and non-technical skills in global environment.\nSupport, coaching and feedback from some of the most engaging colleagues and managers.\nVariety of platforms for upskilling including not limited access to Udemy for business and on-site trainings.\nFlexible full time working hours with respect to your work life balance.\nOpportunity to extend the contract after completing the internship. \n\nIf you can confidently demonstrate that you meet the criteria above, please contact us as soon as possible.\n\nJoin Internship Program at EY GDS Poland. Join us in building a better working world. \n\nIn compliance with the requirements of the Whistleblower Protection Act, our company has established the Procedure for reporting breaches of law and undertaking appropriate follow-up actions. Any misconduct should be reported through the EY Ethics Hotline."
+    },
+    {
+        "id": "1627729152",
+        "date_posted": "2025-05-06T05:23:57",
+        "date_created": "2025-05-06T05:33:25.707743",
+        "title": "Data Science Intern",
+        "organization": "Hirist",
+        "organization_url": "https://www.linkedin.com/company/hirist",
+        "date_validthrough": "2025-06-05T05:23:57",
+        "locations_raw": [
+            {
+                "@type": "Place",
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressCountry": "AU",
+                    "addressLocality": "Perth",
+                    "addressRegion": "WA",
+                    "streetAddress": null
+                },
+                "latitude": -31.95184,
+                "longitude": 115.8587
+            }
+        ],
+        "location_type": "TELECOMMUTE",
+        "location_requirements_raw": [
+            {
+                "@type": "Country",
+                "name": "Perth, Western Australia, Australia"
+            }
+        ],
+        "salary_raw": null,
+        "employment_type": [
+            "INTERN"
+        ],
+        "url": "https://au.linkedin.com/jobs/view/data-science-intern-at-hirist-4221970633",
+        "source_type": "jobboard",
+        "source": "linkedin",
+        "source_domain": "au.linkedin.com",
+        "organization_logo": "https://media.licdn.com/dms/image/v2/D4D0BAQErThH7Cqskfw/company-logo_200_200/B4DZaK2_8XHwAI-/0/1746086396848/hirist_logo?e=2147483647&v=beta&t=zC15TjEDn8Y2dSLOwt2aaI47S318bbVEO898rs6UsiE",
+        "cities_derived": [
+            "Perth"
+        ],
+        "regions_derived": [
+            "Western Australia"
+        ],
+        "countries_derived": [
+            "Australia"
+        ],
+        "locations_derived": [
+            "Perth, Western Australia, Australia"
+        ],
+        "timezones_derived": [
+            "Australia/Perth"
+        ],
+        "lats_derived": [
+            -31.9559
+        ],
+        "lngs_derived": [
+            115.8606
+        ],
+        "remote_derived": true,
+        "recruiter_name": null,
+        "recruiter_title": null,
+        "recruiter_url": null,
+        "linkedin_org_employees": 1,
+        "linkedin_org_url": "www.hirist.us",
+        "linkedin_org_size": "11-50 employees",
+        "linkedin_org_slogan": "Your Growth Parter",
+        "linkedin_org_industry": "Human Resources Services",
+        "linkedin_org_followers": null,
+        "linkedin_org_headquarters": "",
+        "linkedin_org_type": "Privately Held",
+        "linkedin_org_foundeddate": "2018",
+        "linkedin_org_specialties": [
+            ""
+        ],
+        "linkedin_org_locations": [],
+        "linkedin_org_description": "Hirist \u2013 Your Growth Partner in IT Talent Acquisition\n\nAt Hirist, we specialize in connecting forward-thinking tech companies with exceptional IT professionals. As a dedicated IT recruitment consultancy, we bring deep domain expertise, a vast talent network, and a growth-focused mindset to every hiring challenge. Whether you're a startup scaling fast or an enterprise optimizing your workforce, Hirist helps you find, assess, and place top-tier candidates across software development, data science, cybersecurity, DevOps, and emerging tech domains.\n\nDriven by innovation and guided by precision, we don't just fill roles\u2014we build careers and empower organizations with the right talent to grow. With a streamlined recruitment process, personalized support, and a commitment to long-term success, Hirist is your trusted partner in IT talent acquisition.\n",
+        "linkedin_org_recruitment_agency_derived": true,
+        "seniority": "Not Applicable",
+        "directapply": true,
+        "linkedin_org_slug": "hirist",
+        "description_text": "Summer Internship \u2013 Data Science (Beginner to Intermediate Levels Welcome)\nDuration: 3 Months | Remote | Flexible Start\nHiring Partner: HIRIST \u2013 IT Recruitment Partner\nClient: Reputed IT Company (Name confidential)\nAre you passionate about data and eager to apply your skills in real-world projects? Whether you're just starting out or already have some hands-on experience \u2014 this is a chance to be part of a live data science team solving actual business problems.\nHiRIST is hiring Data Science Interns on behalf of one of our IT clients for a summer internship program focused on building real solutions, not simulations or training demos.\n\n\nWhat You\u2019ll Work On:\n\u2022 Collaborate with senior data scientists on live projects\n\u2022 Assist in cleaning, organizing, and analyzing datasets\n\u2022 Contribute to feature engineering for machine learning models\n\u2022 Learn how A/B tests and data experiments are designed and analyzed\n\u2022 Help build dashboards or visualizations that support business decisions\n\n\nWho Should Apply:\nThis internship is ideal for:\n\u2022 Students or recent grads from any STEM or analytical background\n\u2022 Candidates who are self-taught in Python, SQL, or basic data analysis\n\u2022 Beginners who have done personal projects, academic work, or online coursework\n\u2022 Intermediate learners looking to gain real project experience\nYou don\u2019t need to be an expert \u2014 you just need to be willing to contribute, learn fast, and work hard on real tasks under mentorship.\n\n\nMust-Have Skills:\n\u2022 Basic knowledge of Python and/or SQL\n\u2022 Curiosity and willingness to work with data\n\u2022 Familiarity with any one: Excel, Pandas, Numpy, or visualization tools\n\u2022 Good communication and time management skills\n\n\nNice-to-Have (But Not Required):\n\u2022 Experience with data cleaning, modeling, or dashboards\n\u2022 Understanding of statistics or A/B testing\n\u2022 GitHub or portfolio of data projects (even academic ones)\n\n\nPerks & Benefits:\n\u2022 1:1 mentorship from a senior data scientist on the same project\n\u2022 Exposure to real industry-level projects\n\u2022 Internship Certificate at the end of the program\n\u2022 Letter of Recommendation based on performance\n\u2022 Stipend opportunity for selected interns (based on skill level and contributions)\n\n\nSelection Process:\n1. Resume Screening (emphasis on interest and motivation)\n2. Basic Aptitude/Data Task (suitable for beginners too)\n3. Friendly Interview with Mentor/Manager\n4. Final Selection & Onboarding via HiRIST\n\n\nApply If You:\n\u2022 Are available for 4-12 weeks\n\u2022 Can commit at least 15\u201320 hours/week\n\u2022 Are excited to work in a real tech team, not a training bootcamp\n\u2022 Want to add real business project experience to your resume\n\n\nReady to Get Started?\n\nApply with your resume + any portfolio link or project sample (optional).\n\nHiRIST \u2013 Connecting the right talent with the right opportunity.\n\nNOTE- Paid Internship (Stipend will be provided)"
+    },
+    {
+        "id": "1627729097",
+        "date_posted": "2025-05-06T05:09:08",
+        "date_created": "2025-05-06T05:33:22.741",
+        "title": "Data Science Intern",
+        "organization": "Hirist",
+        "organization_url": "https://www.linkedin.com/company/hirist",
+        "date_validthrough": "2025-06-05T05:09:08",
+        "locations_raw": [
+            {
+                "@type": "Place",
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressCountry": "AU",
+                    "addressLocality": "Brisbane",
+                    "addressRegion": "QLD",
+                    "streetAddress": null
+                },
+                "latitude": -27.46778,
+                "longitude": 153.02611
+            }
+        ],
+        "location_type": "TELECOMMUTE",
+        "location_requirements_raw": [
+            {
+                "@type": "Country",
+                "name": "Brisbane, Queensland, Australia"
+            }
+        ],
+        "salary_raw": null,
+        "employment_type": [
+            "INTERN"
+        ],
+        "url": "https://au.linkedin.com/jobs/view/data-science-intern-at-hirist-4221968545",
+        "source_type": "jobboard",
+        "source": "linkedin",
+        "source_domain": "au.linkedin.com",
+        "organization_logo": "https://media.licdn.com/dms/image/v2/D4D0BAQErThH7Cqskfw/company-logo_200_200/B4DZaK2_8XHwAI-/0/1746086396848/hirist_logo?e=2147483647&v=beta&t=zC15TjEDn8Y2dSLOwt2aaI47S318bbVEO898rs6UsiE",
+        "cities_derived": [
+            "Brisbane"
+        ],
+        "regions_derived": [
+            "Queensland"
+        ],
+        "countries_derived": [
+            "Australia"
+        ],
+        "locations_derived": [
+            "Brisbane, Queensland, Australia"
+        ],
+        "timezones_derived": [
+            "Australia/Brisbane"
+        ],
+        "lats_derived": [
+            -27.4678
+        ],
+        "lngs_derived": [
+            153.0281
+        ],
+        "remote_derived": true,
+        "recruiter_name": null,
+        "recruiter_title": null,
+        "recruiter_url": null,
+        "linkedin_org_employees": 1,
+        "linkedin_org_url": "www.hirist.us",
+        "linkedin_org_size": "11-50 employees",
+        "linkedin_org_slogan": "Your Growth Parter",
+        "linkedin_org_industry": "Human Resources Services",
+        "linkedin_org_followers": null,
+        "linkedin_org_headquarters": "",
+        "linkedin_org_type": "Privately Held",
+        "linkedin_org_foundeddate": "2018",
+        "linkedin_org_specialties": [
+            ""
+        ],
+        "linkedin_org_locations": [],
+        "linkedin_org_description": "Hirist \u2013 Your Growth Partner in IT Talent Acquisition\n\nAt Hirist, we specialize in connecting forward-thinking tech companies with exceptional IT professionals. As a dedicated IT recruitment consultancy, we bring deep domain expertise, a vast talent network, and a growth-focused mindset to every hiring challenge. Whether you're a startup scaling fast or an enterprise optimizing your workforce, Hirist helps you find, assess, and place top-tier candidates across software development, data science, cybersecurity, DevOps, and emerging tech domains.\n\nDriven by innovation and guided by precision, we don't just fill roles\u2014we build careers and empower organizations with the right talent to grow. With a streamlined recruitment process, personalized support, and a commitment to long-term success, Hirist is your trusted partner in IT talent acquisition.\n",
+        "linkedin_org_recruitment_agency_derived": true,
+        "seniority": "Not Applicable",
+        "directapply": true,
+        "linkedin_org_slug": "hirist",
+        "description_text": "Summer Internship \u2013 Data Science (Beginner to Intermediate Levels Welcome)\nDuration: 3 Months | Remote | Flexible Start\nHiring Partner: HIRIST \u2013 IT Recruitment Partner\nClient: Reputed IT Company (Name confidential)\nAre you passionate about data and eager to apply your skills in real-world projects? Whether you're just starting out or already have some hands-on experience \u2014 this is a chance to be part of a live data science team solving actual business problems.\nHiRIST is hiring Data Science Interns on behalf of one of our IT clients for a summer internship program focused on building real solutions, not simulations or training demos.\n\nWhat You\u2019ll Work On:\n\u2022 Collaborate with senior data scientists on live projects\n\u2022 Assist in cleaning, organizing, and analyzing datasets\n\u2022 Contribute to feature engineering for machine learning models\n\u2022 Learn how A/B tests and data experiments are designed and analyzed\n\u2022 Help build dashboards or visualizations that support business decisions\n\nWho Should Apply:\nThis internship is ideal for:\n\u2022 Students or recent grads from any STEM or analytical background\n\u2022 Candidates who are self-taught in Python, SQL, or basic data analysis\n\u2022 Beginners who have done personal projects, academic work, or online coursework\n\u2022 Intermediate learners looking to gain real project experience\nYou don\u2019t need to be an expert \u2014 you just need to be willing to contribute, learn fast, and work hard on real tasks under mentorship.\n\nMust-Have Skills:\n\u2022 Basic knowledge of Python and/or SQL\n\u2022 Curiosity and willingness to work with data\n\u2022 Familiarity with any one: Excel, Pandas, Numpy, or visualization tools\n\u2022 Good communication and time management skills\n\nNice-to-Have (But Not Required):\n\u2022 Experience with data cleaning, modeling, or dashboards\n\u2022 Understanding of statistics or A/B testing\n\u2022 GitHub or portfolio of data projects (even academic ones)\n\nPerks & Benefits:\n\u2022 1:1 mentorship from a senior data scientist on the same project\n\u2022 Exposure to real industry-level projects\n\u2022 Internship Certificate at the end of the program\n\u2022 Letter of Recommendation based on performance\n\u2022 Stipend opportunity for selected interns (based on skill level and contributions)\n\nSelection Process:\n1. Resume Screening (emphasis on interest and motivation)\n2. Basic Aptitude/Data Task (suitable for beginners too)\n3. Friendly Interview with Mentor/Manager\n4. Final Selection & Onboarding via HiRIST\n\nApply If You:\n\u2022 Are available for 4-12 weeks\n\u2022 Can commit at least 15\u201320 hours/week\n\u2022 Are excited to work in a real tech team, not a training bootcamp\n\u2022 Want to add real business project experience to your resume\n\nReady to Get Started?\n\nApply with your resume + any portfolio link or project sample (optional).\n\nHiRIST \u2013 Connecting the right talent with the right opportunity.\n\n\nNOTE- Paid Internship (Stipend will be provided)"
+    },
+    {
+        "id": "1627728647",
+        "date_posted": "2025-05-06T05:07:52",
+        "date_created": "2025-05-06T05:33:02.530563",
+        "title": "Data Science Intern",
+        "organization": "Hirist",
+        "organization_url": "https://www.linkedin.com/company/hirist",
+        "date_validthrough": "2025-06-05T05:07:52",
+        "locations_raw": [
+            {
+                "@type": "Place",
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressCountry": "AU",
+                    "addressLocality": "Sydney",
+                    "addressRegion": "NSW",
+                    "streetAddress": null
+                },
+                "latitude": -33.8732,
+                "longitude": 151.2096
+            }
+        ],
+        "location_type": "TELECOMMUTE",
+        "location_requirements_raw": [
+            {
+                "@type": "Country",
+                "name": "Sydney, New South Wales, Australia"
+            }
+        ],
+        "salary_raw": null,
+        "employment_type": [
+            "INTERN"
+        ],
+        "url": "https://au.linkedin.com/jobs/view/data-science-intern-at-hirist-4221966848",
+        "source_type": "jobboard",
+        "source": "linkedin",
+        "source_domain": "au.linkedin.com",
+        "organization_logo": "https://media.licdn.com/dms/image/v2/D4D0BAQErThH7Cqskfw/company-logo_200_200/B4DZaK2_8XHwAI-/0/1746086396848/hirist_logo?e=2147483647&v=beta&t=zC15TjEDn8Y2dSLOwt2aaI47S318bbVEO898rs6UsiE",
+        "cities_derived": [
+            "Sydney"
+        ],
+        "regions_derived": [
+            "New South Wales"
+        ],
+        "countries_derived": [
+            "Australia"
+        ],
+        "locations_derived": [
+            "Sydney, New South Wales, Australia"
+        ],
+        "timezones_derived": [
+            "Australia/Sydney"
+        ],
+        "lats_derived": [
+            -33.8678
+        ],
+        "lngs_derived": [
+            151.21
+        ],
+        "remote_derived": true,
+        "recruiter_name": null,
+        "recruiter_title": null,
+        "recruiter_url": null,
+        "linkedin_org_employees": 1,
+        "linkedin_org_url": "www.hirist.us",
+        "linkedin_org_size": "11-50 employees",
+        "linkedin_org_slogan": "Your Growth Parter",
+        "linkedin_org_industry": "Human Resources Services",
+        "linkedin_org_followers": null,
+        "linkedin_org_headquarters": "",
+        "linkedin_org_type": "Privately Held",
+        "linkedin_org_foundeddate": "2018",
+        "linkedin_org_specialties": [
+            ""
+        ],
+        "linkedin_org_locations": [],
+        "linkedin_org_description": "Hirist \u2013 Your Growth Partner in IT Talent Acquisition\n\nAt Hirist, we specialize in connecting forward-thinking tech companies with exceptional IT professionals. As a dedicated IT recruitment consultancy, we bring deep domain expertise, a vast talent network, and a growth-focused mindset to every hiring challenge. Whether you're a startup scaling fast or an enterprise optimizing your workforce, Hirist helps you find, assess, and place top-tier candidates across software development, data science, cybersecurity, DevOps, and emerging tech domains.\n\nDriven by innovation and guided by precision, we don't just fill roles\u2014we build careers and empower organizations with the right talent to grow. With a streamlined recruitment process, personalized support, and a commitment to long-term success, Hirist is your trusted partner in IT talent acquisition.\n",
+        "linkedin_org_recruitment_agency_derived": true,
+        "seniority": "Not Applicable",
+        "directapply": true,
+        "linkedin_org_slug": "hirist",
+        "description_text": "Summer Internship \u2013 Data Science (Beginner to Intermediate Levels Welcome)\nDuration: 3 Months | Remote | Flexible Start\nHiring Partner: HIRIST \u2013 IT Recruitment Partner\nClient: Reputed IT Company (Name confidential)\n\nAre you passionate about data and eager to apply your skills in real-world projects? Whether you're just starting out or already have some hands-on experience \u2014 this is a chance to be part of a live data science team solving actual business problems.\n\nHiRIST is hiring Data Science Interns on behalf of one of our IT clients for a summer internship program focused on building real solutions, not simulations or training demos.\n\nWhat You\u2019ll Work On:\n\u2022 Collaborate with senior data scientists on live projects\n\u2022 Assist in cleaning, organizing, and analyzing datasets\n\u2022 Contribute to feature engineering for machine learning models\n\u2022 Learn how A/B tests and data experiments are designed and analyzed\n\u2022 Help build dashboards or visualizations that support business decisions\n\nWho Should Apply:\nThis internship is ideal for:\n\u2022 Students or recent grads from any STEM or analytical background\n\u2022 Candidates who are self-taught in Python, SQL, or basic data analysis\n\u2022 Beginners who have done personal projects, academic work, or online coursework\n\u2022 Intermediate learners looking to gain real project experience\nYou don\u2019t need to be an expert \u2014 you just need to be willing to contribute, learn fast, and work hard on real tasks under mentorship.\n\nMust-Have Skills:\n\u2022 Basic knowledge of Python and/or SQL\n\u2022 Curiosity and willingness to work with data\n\u2022 Familiarity with any one: Excel, Pandas, Numpy, or visualization tools\n\u2022 Good communication and time management skills\n\nNice-to-Have (But Not Required):\n\u2022 Experience with data cleaning, modeling, or dashboards\n\u2022 Understanding of statistics or A/B testing\n\u2022 GitHub or portfolio of data projects (even academic ones)\n\nPerks & Benefits:\n\u2022 1:1 mentorship from a senior data scientist on the same project\n\u2022 Exposure to real industry-level projects\n\u2022 Internship Certificate at the end of the program\n\u2022 Letter of Recommendation based on performance\n\u2022 Stipend opportunity for selected interns (based on skill level and contributions)\n\nSelection Process:\n1. Resume Screening (emphasis on interest and motivation)\n2. Basic Aptitude/Data Task (suitable for beginners too)\n3. Friendly Interview with Mentor/Manager\n4. Final Selection & Onboarding via HiRIST\n\nApply If You:\n\u2022 Are available for 4-12 weeks\n\u2022 Can commit at least 15\u201320 hours/week\n\u2022 Are excited to work in a real tech team, not a training bootcamp\n\u2022 Want to add real business project experience to your resume\n\nReady to Get Started?\nApply with your resume + any portfolio link or project sample (optional).\n\nNote - Paid Internship (Stipend will be provided).\n\nHiRIST \u2013 Connecting the right talent with the right opportunity."
+    },
+    {
+        "id": "1627728817",
+        "date_posted": "2025-05-06T05:07:16",
+        "date_created": "2025-05-06T05:33:09.446446",
+        "title": "Data Science Intern",
+        "organization": "Hirist",
+        "organization_url": "https://www.linkedin.com/company/hirist",
+        "date_validthrough": "2025-06-05T05:07:16",
+        "locations_raw": [
+            {
+                "@type": "Place",
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressCountry": "AU",
+                    "addressLocality": "Melbourne",
+                    "addressRegion": "VIC",
+                    "streetAddress": null
+                },
+                "latitude": -37.81546,
+                "longitude": 144.96716
+            }
+        ],
+        "location_type": "TELECOMMUTE",
+        "location_requirements_raw": [
+            {
+                "@type": "Country",
+                "name": "Melbourne, Victoria, Australia"
+            }
+        ],
+        "salary_raw": null,
+        "employment_type": [
+            "INTERN"
+        ],
+        "url": "https://au.linkedin.com/jobs/view/data-science-intern-at-hirist-4221964938",
+        "source_type": "jobboard",
+        "source": "linkedin",
+        "source_domain": "au.linkedin.com",
+        "organization_logo": "https://media.licdn.com/dms/image/v2/D4D0BAQErThH7Cqskfw/company-logo_200_200/B4DZaK2_8XHwAI-/0/1746086396848/hirist_logo?e=2147483647&v=beta&t=zC15TjEDn8Y2dSLOwt2aaI47S318bbVEO898rs6UsiE",
+        "cities_derived": [
+            "Melbourne"
+        ],
+        "regions_derived": [
+            "Victoria"
+        ],
+        "countries_derived": [
+            "Australia"
+        ],
+        "locations_derived": [
+            "Melbourne, Victoria, Australia"
+        ],
+        "timezones_derived": [
+            "Australia/Melbourne"
+        ],
+        "lats_derived": [
+            -37.8142
+        ],
+        "lngs_derived": [
+            144.9631
+        ],
+        "remote_derived": true,
+        "recruiter_name": null,
+        "recruiter_title": null,
+        "recruiter_url": null,
+        "linkedin_org_employees": 1,
+        "linkedin_org_url": "www.hirist.us",
+        "linkedin_org_size": "11-50 employees",
+        "linkedin_org_slogan": "Your Growth Parter",
+        "linkedin_org_industry": "Human Resources Services",
+        "linkedin_org_followers": null,
+        "linkedin_org_headquarters": "",
+        "linkedin_org_type": "Privately Held",
+        "linkedin_org_foundeddate": "2018",
+        "linkedin_org_specialties": [
+            ""
+        ],
+        "linkedin_org_locations": [],
+        "linkedin_org_description": "Hirist \u2013 Your Growth Partner in IT Talent Acquisition\n\nAt Hirist, we specialize in connecting forward-thinking tech companies with exceptional IT professionals. As a dedicated IT recruitment consultancy, we bring deep domain expertise, a vast talent network, and a growth-focused mindset to every hiring challenge. Whether you're a startup scaling fast or an enterprise optimizing your workforce, Hirist helps you find, assess, and place top-tier candidates across software development, data science, cybersecurity, DevOps, and emerging tech domains.\n\nDriven by innovation and guided by precision, we don't just fill roles\u2014we build careers and empower organizations with the right talent to grow. With a streamlined recruitment process, personalized support, and a commitment to long-term success, Hirist is your trusted partner in IT talent acquisition.\n",
+        "linkedin_org_recruitment_agency_derived": true,
+        "seniority": "Not Applicable",
+        "directapply": true,
+        "linkedin_org_slug": "hirist",
+        "description_text": "Summer Internship \u2013 Data Science (Beginner to Intermediate Levels Welcome)\nDuration: 3 Months | Remote | Flexible Start\nHiring Partner: HIRIST \u2013 IT Recruitment Partner\nClient: Reputed IT Company (Name confidential)\n\nAre you passionate about data and eager to apply your skills in real-world projects? Whether you're just starting out or already have some hands-on experience \u2014 this is a chance to be part of a live data science team solving actual business problems.\n\nHiRIST is hiring Data Science Interns on behalf of one of our IT clients for a summer internship program focused on building real solutions, not simulations or training demos.\n\nWhat You\u2019ll Work On:\n\u2022 Collaborate with senior data scientists on live projects\n\u2022 Assist in cleaning, organizing, and analyzing datasets\n\u2022 Contribute to feature engineering for machine learning models\n\u2022 Learn how A/B tests and data experiments are designed and analyzed\n\u2022 Help build dashboards or visualizations that support business decisions\n\nWho Should Apply:\nThis internship is ideal for:\n\u2022 Students or recent grads from any STEM or analytical background\n\u2022 Candidates who are self-taught in Python, SQL, or basic data analysis\n\u2022 Beginners who have done personal projects, academic work, or online coursework\n\u2022 Intermediate learners looking to gain real project experience\nYou don\u2019t need to be an expert \u2014 you just need to be willing to contribute, learn fast, and work hard on real tasks under mentorship.\n\nMust-Have Skills:\n\u2022 Basic knowledge of Python and/or SQL\n\u2022 Curiosity and willingness to work with data\n\u2022 Familiarity with any one: Excel, Pandas, Numpy, or visualization tools\n\u2022 Good communication and time management skills\n\nNice-to-Have (But Not Required):\n\u2022 Experience with data cleaning, modeling, or dashboards\n\u2022 Understanding of statistics or A/B testing\n\u2022 GitHub or portfolio of data projects (even academic ones)\n\nPerks & Benefits:\n\u2022 1:1 mentorship from a senior data scientist on the same project\n\u2022 Exposure to real industry-level projects\n\u2022 Internship Certificate at the end of the program\n\u2022 Letter of Recommendation based on performance\n\u2022 Stipend opportunity for selected interns (based on skill level and contributions)\n\nSelection Process:\n1. Resume Screening (emphasis on interest and motivation)\n2. Basic Aptitude/Data Task (suitable for beginners too)\n3. Friendly Interview with Mentor/Manager\n4. Final Selection & Onboarding via HiRIST\n\nApply If You:\n\u2022 Are available for 4-12 weeks\n\u2022 Can commit at least 15\u201320 hours/week\n\u2022 Are excited to work in a real tech team, not a training bootcamp\n\u2022 Want to add real business project experience to your resume\n\nReady to Get Started?\nApply with your resume + any portfolio link or project sample (optional).\n\nNote - Paid Internship (Stipend will be provided).\n\nHiRIST \u2013 Connecting the right talent with the right opportunity."
+    },
+    {
+        "id": "1629790191",
+        "date_posted": "2025-05-06T00:00:00",
+        "date_created": "2025-05-06T19:36:26.898668",
+        "title": "Global Operations Data Science Intern",
+        "organization": "NetApp Instaclustr",
+        "organization_url": "https://www.linkedin.com/company/instaclustr",
+        "date_validthrough": "2025-06-05T10:21:02",
+        "locations_raw": [
+            {
+                "@type": "Place",
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressCountry": "US",
+                    "addressLocality": "North Carolina",
+                    "addressRegion": "United States",
+                    "streetAddress": null
+                },
+                "latitude": 35.539375,
+                "longitude": -79.18542
+            }
+        ],
+        "location_type": null,
+        "location_requirements_raw": null,
+        "salary_raw": null,
+        "employment_type": [
+            "INTERN"
+        ],
+        "url": "https://www.linkedin.com/jobs/view/global-operations-data-science-intern-at-netapp-instaclustr-4222207683",
+        "source_type": "jobboard",
+        "source": "linkedin",
+        "source_domain": "linkedin.com",
+        "organization_logo": "https://media.licdn.com/dms/image/v2/D4E0BAQGcRFmDwEt99g/company-logo_200_200/company-logo_200_200/0/1727063532066/instaclustr_logo?e=2147483647&v=beta&t=BGwXBxIiRZF8H0bbyqcUVctxLZjHpW9wPCefdWFX9eA",
+        "cities_derived": null,
+        "regions_derived": [
+            "North Carolina"
+        ],
+        "countries_derived": [
+            "United States"
+        ],
+        "locations_derived": [
+            "North Carolina, United States"
+        ],
+        "timezones_derived": [
+            "America/New_York"
+        ],
+        "lats_derived": [
+            35.8324
+        ],
+        "lngs_derived": [
+            -78.6429
+        ],
+        "remote_derived": false,
+        "recruiter_name": null,
+        "recruiter_title": null,
+        "recruiter_url": null,
+        "linkedin_org_employees": 123,
+        "linkedin_org_url": "https://www.instaclustr.com",
+        "linkedin_org_size": "201-500 employees",
+        "linkedin_org_slogan": "Intelligent, open source application data infrastructure for the enterprise",
+        "linkedin_org_industry": "IT Services and IT Consulting",
+        "linkedin_org_followers": 7889,
+        "linkedin_org_headquarters": "Redwood City, California",
+        "linkedin_org_type": "Privately Held",
+        "linkedin_org_foundeddate": "2013",
+        "linkedin_org_specialties": [
+            "Managed Apache Cassandra",
+            "Managed Apache Spark",
+            "Apache Cassandra Support",
+            "Managed ScyllaDB",
+            "Apache Cassandra Consulting",
+            "Open Source Data Management",
+            "Managed and Hosted Apache Spark",
+            "Lucene Search",
+            "Apache Zeppelin",
+            "Apache Kafka",
+            "Cassandra as a Service",
+            "Elasticsearch",
+            "Apache Kafka Consulting",
+            "Big Data",
+            "Apache Cassandra",
+            "Apache Spark",
+            "Cassandra",
+            "Kafka",
+            "Open Source",
+            "Redis",
+            "and Postgresql"
+        ],
+        "linkedin_org_locations": [
+            "303 Twin Dolphin Dr, Suite 600, Redwood City, California 94065, US",
+            "Level A, Building 23, University Drive South, Bruce, Canberra, ACT 2617, AU",
+            "Reading Business Centre, Fountain House, 2 Queens Walk, Reading, England RG1 7QF, GB"
+        ],
+        "linkedin_org_description": "Instaclustr helps companies unlock the true power of open source technologies through its managed platform for deploying, managing, and monitoring all components of their data infrastructure. \n\nInstaclustr combines a complete data infrastructure environment with hands-on technology expertise to ensure ongoing performance and optimization. By removing the infrastructure complexity, we enable companies to focus internal development and operational resources on building cutting edge customer-facing applications at lower cost. Instaclustr customers include some of the largest and most innovative Fortune 500 companies.",
+        "linkedin_org_recruitment_agency_derived": false,
+        "seniority": "Internship",
+        "directapply": false,
+        "linkedin_org_slug": "instaclustr",
+        "description_text": "Job Summary\n\nAs a Data Scientist Intern within the Global Operations team, you will play a crucial role in adopting AI/ML technologies to enhance business processes and improve ROI. This internship offers a unique opportunity to gain hands-on experience in data science, machine learning, and AI, and to apply your academic knowledge to real-world business challenges.\n\nKey Responsibilities\n\nJob Requirements\n\nAssist in the development and implementation of AI/ML models to optimize business processes and improve operational efficiency.\nWork alongside experienced data scientists to analyze data, build models, and test hypotheses aimed at enhancing business process ROI.\nParticipate in cross-functional projects to apply AI/ML solutions to various business problems.\nLearn and apply best practices in data exploration, model development, and algorithm optimization.\nEngage with the latest AI/ML technologies and methodologies under expert guidance.\nSupport the team in ensuring data integrity and security in all AI/ML applications.\nConduct market research and data analysis to identify opportunities for AI/ML adoption and process improvement.\nDevelop financial models and perform data-driven financial analysis to support decision-making processes.\n\nEducation\n\nCurrently pursuing a Bachelor's or Master's degree in Computer Science, Data Science, Statistics, Economics, Business Administration, or a related field.\nAcademic or project experience in AI/ML model development.\nBasic programming skills in Python, R, or other data science languages.\nA keen interest in AI/ML frameworks and libraries such as Langchain, scikitlearn.\nExperience in financial modeling, market research, and data analysis.\nProficiency in MS Excel, including pivot tables, and familiarity with financial analysis tools.\nA strong desire to learn and a collaborative work ethic.\n\nCompensation\n\nFinal compensation packages are competitive and in line with industry standards, reflecting a variety of factors, and include a comprehensive benefits package. This may cover Health Insurance, Life Insurance, Retirement or Pension Plans, Paid Time Off (PTO), various Leave options, Performance-Based Incentives, employee stock purchase plan, and/or restricted stocks (RSU\u2019s), with all offerings subject to regional variations and governed by local laws, regulations, and company policies. Benefits may vary by country and region, and further details will be provided as part of the recruitment process.\n\nAt NetApp, we embrace a hybrid working environment designed to strengthen connection, collaboration, and culture for all employees. This means that most roles will have some level of in-office and/or in-person expectations, which will be shared during the recruitment process.\n\nEqual Opportunity Employer\n\nNetApp is firmly committed to Equal Employment Opportunity (EEO) and to compliance with all federal, state and local laws that prohibit employment discrimination based on age, race, color, gender, sexual orientation, gender identity, national origin, religion, disability or genetic information, pregnancy, protected veteran status, and any other protected classification.\n\nWhy NetApp?\n\nWe are all about helping customers turn challenges into business opportunity. It starts with bringing new thinking to age-old problems, like how to use data most effectively to run better - but also to innovate. We tailor our approach to the customer's unique needs with a combination of fresh thinking and proven approaches.\n\nWe enable a healthy work-life balance. Our volunteer time off program is best in class, offering employees 40 hours of paid time per year to volunteer with their favorite organizations. We provide comprehensive medical, dental, wellness, and vision plans for you and your family. We offer educational assistance, legal services, and access to discounts. Finally, we provide financial savings programs to help you plan for your future.\n\nIf you want to help us build knowledge and solve big problems, let's talk.\n\nSubmitting an application\n\nTo ensure a streamlined and fair hiring process for all candidates, our team only reviews applications submitted through our company website. This practice allows us to track, assess, and respond to applicants efficiently. Emailing our employees, recruiters, or Human Resources personnel directly will not influence your application.\n\nApply"
+    },
+    {
+        "id": "1626714237",
+        "date_posted": "2025-05-05T22:43:59",
+        "date_created": "2025-05-05T23:04:14.927686",
+        "title": "Data Science Intern",
+        "organization": "Parts Town",
+        "organization_url": "https://www.linkedin.com/company/parts-town",
+        "date_validthrough": "2025-06-04T22:43:59",
+        "locations_raw": [
+            {
+                "@type": "Place",
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressCountry": "US",
+                    "addressLocality": "DuPage County",
+                    "addressRegion": "IL",
+                    "streetAddress": null
+                },
+                "latitude": 41.866127,
+                "longitude": -88.106636
+            }
+        ],
+        "location_type": null,
+        "location_requirements_raw": null,
+        "salary_raw": null,
+        "employment_type": [
+            "INTERN"
+        ],
+        "url": "https://www.linkedin.com/jobs/view/data-science-intern-at-parts-town-4221582332",
+        "source_type": "jobboard",
+        "source": "linkedin",
+        "source_domain": "linkedin.com",
+        "organization_logo": "https://media.licdn.com/dms/image/v2/D560BAQFb5Ujb6c6GKw/company-logo_200_200/company-logo_200_200/0/1700576650924/parts_town_logo?e=2147483647&v=beta&t=dGBWHwJ9XrBzgVRbkoefnKrCNF7UI-yWpcpWULzxSQU",
+        "cities_derived": null,
+        "regions_derived": [
+            "Illinois"
+        ],
+        "countries_derived": [
+            "United States"
+        ],
+        "locations_derived": [
+            "Illinois, United States"
+        ],
+        "timezones_derived": [
+            "America/Chicago"
+        ],
+        "lats_derived": [
+            39.7709
+        ],
+        "lngs_derived": [
+            -89.654
+        ],
+        "remote_derived": false,
+        "recruiter_name": null,
+        "recruiter_title": null,
+        "recruiter_url": null,
+        "linkedin_org_employees": 757,
+        "linkedin_org_url": "https://www.partstown.com",
+        "linkedin_org_size": "1,001-5,000 employees",
+        "linkedin_org_slogan": "Parts Town is your #1 source for real OEM replacement parts for foodservice equipment, residential appliances and HVAC",
+        "linkedin_org_industry": "Transportation, Logistics, Supply Chain and Storage",
+        "linkedin_org_followers": 14658,
+        "linkedin_org_headquarters": "Addison, IL",
+        "linkedin_org_type": "Privately Held",
+        "linkedin_org_foundeddate": "1987",
+        "linkedin_org_specialties": [
+            "Restaurant Equipment Replacement Parts",
+            "Commercial Kitchen Replacement Parts",
+            "Same Day Shipping on all in-stock parts until 9PM ET Mon - Fri & online air orders ship Saturdays until 4 PM ET",
+            "and Industry's Best Website"
+        ],
+        "linkedin_org_locations": [
+            "1200 Greenbriar Dr, Addison, IL 60101, US"
+        ],
+        "linkedin_org_description": "Parts Town was built from the ground up in 1987 with a team of just 5 people. The goal \u2013 to reinvent the restaurant equipment parts industry. 35 years later, we\u2019re one of the fastest growing parts distributors in the foodservice equipment industry and have 1000+ team members who support national and international customers.\nHow did we do it? We hired great people with great ideas. Where others saw the impossible, our Townspeople saw opportunity. We formed important partnerships with manufacturers and built an expansive inventory of OEM parts so we can ship faster and more efficiently. We kept technology front of mind, developing the industry\u2019s first mobile app, where you can research and purchase parts with ease (no more headaches!). As our story continues to unfold, our culture will continue to be centered around our core values (Safety, Integrity, Community, Passion, Courage, and Innovation).\nParts Town has been named to the Inc. 5000 list 15 years in a row, the Crain\u2019s Fast 50 list 10 times, and we\u2019ve landed on Chicago Tribune\u2019s Top Workplace list for the past 3 years. We aren\u2019t satisfied yet - our sights are always set on bigger, outside-the-box opportunities that will shake up the norm. We\u2019re just getting started. Join us!",
+        "linkedin_org_recruitment_agency_derived": false,
+        "seniority": "Not Applicable",
+        "directapply": false,
+        "linkedin_org_slug": "parts-town",
+        "description_text": "Description\n\nPosition at Parts Town\n\nData Scientist Intern\n\nSee What We\u2019re All About\n\nAs the fastest-growing distributor of restaurant equipment, HVAC and residential appliance parts, we like to do things a little differently. First, you need to understand and demonstrate our Core Values with safety being your first priority. That\u2019s key. But we\u2019re also looking for unique enthusiasm, high integrity, courage to embrace change\u2026and if you know a few jokes, that puts you on the top of our list!\n\nDo you have a genius-level knowledge of original equipment manufacturer parts? If not, no problem! We\u2019re more interested in passionate people with fresh ideas from different backgrounds. That\u2019s what keeps us at the top of our game. We\u2019re proud that our workplace has been recognized for its growth and innovation on the Inc. 5000 list 15 years in a row and the Crain\u2019s Fast 50 list ten times. We are honored to be voted by our Chicagoland team as a Chicago Tribune Top Workplace for the last four years.\n\nIf you\u2019re ready to roll up your sleeves, go above and beyond and put your ambition to work, all while having some fun, let\u2019s chat \u2013 Apply Today!\n\nPerks\n\nParts Town Pride \u2013 check out our virtual tour and culture!\nHybrid Work schedule \nTeam member appreciation events and recognition programs\nVolunteer opportunities\nCasual dress code\nOn-demand pay options: Access your pay as you earn it, to cover unexpected or even everyday expenses \n\nThe Job at a Glance\n\nJoin Red Lightning, Parts Town\u2019s innovation hub, as a Data Scientist Intern, and be part of the future of AI in the service and parts industry. We\u2019re looking for someone who is curious, creative, and driven to join our fast-paced innovation team for a 10-week internship where you\u2019ll work on real-world challenges, testing and building AI models that will shape the next generation of smart services and digital tools.\n\nThis internship is ideal for those passionate about using AI to solve practical business problems - with an emphasis on experimentation, rapid prototyping, and cross-functional collaboration. Our goal is for you to build confidence and walk away with more knowledge and a clearer picture of where you want to go in your career.\n\nA Typical Day\n\nClean, prepare, and analyze structured and unstructured data from multiple sources (e.g., transaction logs, equipment signals, CRM).\nIdentify trends, anomalies, and key features relevant to business objectives.\nDevelop, test, and refine machine learning models to support use cases.\nWork closely with AI Engineers to turn insights into scalable solutions.\nCommunicate findings through dashboards, visuals, and presentations.\nOwn a mini project from exploration to insight delivery, with mentorship from the team.\n\nTo Land This Opportunity\n\nYou\u2019re working toward a Bachelor\u2019s degree in one of the following fields: Data Science, Computer Science or Data Engineering \nStrong foundation in statistics, data exploration, and machine learning.\nKnowledge of Python and common data science libraries (e.g., pandas, scikit-learn, TensorFlow, matplotlib, seaborn).\nFamiliarity with predictive modeling, time series analysis, anomaly detection, and classification techniques.\nBonus: Exposure to NLP, LLM, or recommendation systems.\nYou\u2019re an all-star communicator and are proficient in English (both written and verbal)\n\nAbout Your Future Team\n\nAt Parts Town, we value transparency and are committed to ensuring our team members feel appreciated and supported. We prioritize our positive workplace culture where collaboration, growth, and work-life balance are celebrated. The pay for this internship is $17.00 per hour. Parts Town is a pay for performance-company. In addition to base pay, some roles offer a profit-sharing program, and an annual bonus depending on the role. Our comprehensive benefits package includes health, dental and vision insurance, 401(k) with match, employee assistance programs, paid time off, paid sick time off, paid holidays, paid parental leave, and professional development opportunities.\n\nParts Town welcomes diversity and as an equal opportunity employer all qualified applicants will be considered regardless of race, religion, color, national origin, sex, age, sexual orientation, gender identity, disability or protected veteran status."
+    }
+]
