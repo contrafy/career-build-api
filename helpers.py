@@ -103,34 +103,52 @@ def _pdf_to_text(pdf_bytes: bytes) -> str:
 _FILTER_DOC = """
 You are an API filter generator. Your job is to analyse résumés
 and output **ONLY** a JSON object with the most specific filters you can derive,
-using the keys listed below. If a filter cannot be inferred with decent
-confidence, leave it out completely. Try not to guess, but a meaningful and somewhat likely filter is better than no filter, unless it is genuinely impossible to assume a param.
+using the keys listed below.
 
-Valid JSON keys (duplicate keys across APIs appear only once):
-    title_filter
-    advanced_title_filter
-    location_filter
-    description_filter
-    description_type
-    remote                (true | false)
-    agency                (true | false)
-    include_ai            (true | false)
-    ai_work_arrangement_filter
-    limit                 (10‑100)
-    offset
-    organization_filter
-    source
-    ai_employment_type_filter
-    ai_has_salary         (true | false)
-    ai_experience_level_filter
-    ai_visa_sponsorship_filter
-    include_li            (true | false)
-    li_organization_slug_filter
-    li_organization_slug_exclusion_filter
-    li_industry_filter
-    li_organization_specialties_filter
-    li_organization_description_filter
-    date_filter
+Valid JSON keys:
+    advanced_title_filter         
+    location_filter       
+
+API documentation for these query parameters:
+
+advanced_title_filter
+String
+
+Advanced Title filter which enables more features like parenthesis, 'AND', and prefix searching.
+
+Phrares (two words or more) always need to be single quoted or use the operator <->
+
+Instead of using natural language like 'OR' you need to use operators like:
+
+    & (AND)
+    | (OR)
+    ! (NOT)
+    <-> (FOLLOWED BY)
+    ' ' (FOLLOWED BY alternative, does not work with 6. Prefix Wildcard)
+    :* (Prefix Wildcard)
+
+For example:
+
+(AI | 'Machine Learning' | 'Robotics') & ! Marketing
+
+Will return all jobs with ai, or machine learning, or robotics in the title except titles with marketing
+
+Project <-> Manag:*
+
+Will return jobs like Project Manager or Project Management
+
+Your goal when crafting a advanced_title_filter based on a resume is to MAXIMIZE the breadth of jobs that the API returns while still remaining specific to their skills and experience.
+This means you should ensure, for example with a CS heavy resume, that (software engineering OR software) and optionally based on the resume (frontend OR backend etc.) are added in an all encompassing way using OR's and splitting keywords,
+while still ensuring that 'engineer' is not independently used as a keyword to avoid irrelevant non-CS engineering jobs such as mechanical engineering. Complexity in this query is fine if needed in order to avoid irrelevant jobs or roles unlikely to be a good fit (no need to include backend if the resume is unapologetically geared towards frontend dev for example).
+
+Location_filter
+String
+
+Filter on location. Please do not search on abbreviations like US, UK, NYC. Instead, search on full names like United States, New York, United Kingdom.
+
+You may filter on more than one location in a single API call using the OR parameter. For example: Dubai OR Netherlands OR Belgium
+
+With this one, you should avoid limiting to a specific city and default to the state if known, or country if not. If options are specified on the resume, use them.
 
 Output format **strictly**:
 ```json

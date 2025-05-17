@@ -9,6 +9,7 @@ router = APIRouter()
 @router.get("/fetch_internships")
 async def fetch_internships(request: Request):
     try:
+        print(request.query_params)
         return helpers.fetch_internships(dict(request.query_params))
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
@@ -17,6 +18,7 @@ async def fetch_internships(request: Request):
 @router.get("/fetch_jobs")
 async def fetch_jobs(request: Request):
     try:
+        print(request)
         return helpers.fetch_jobs(dict(request.query_params))
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
@@ -25,6 +27,7 @@ async def fetch_jobs(request: Request):
 @router.get("/fetch_yc_jobs")
 async def fetch_yc_jobs(request: Request):
     try:
+        print(request.query_params)
         return helpers.fetch_yc_jobs(dict(request.query_params))
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
