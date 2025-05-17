@@ -138,8 +138,8 @@ Project <-> Manag:*
 Will return jobs like Project Manager or Project Management
 
 Your goal when crafting a advanced_title_filter based on a resume is to MAXIMIZE the breadth of jobs that the API returns while still remaining specific to their skills and experience.
-This means you should ensure, for example with a CS heavy resume, that (software engineering OR software) and optionally based on the resume (frontend OR backend etc.) are added in an all encompassing way using OR's and splitting keywords,
-while still ensuring that 'engineer' is not independently used as a keyword to avoid irrelevant non-CS engineering jobs such as mechanical engineering. Complexity in this query is fine if needed in order to avoid irrelevant jobs or roles unlikely to be a good fit (no need to include backend if the resume is unapologetically geared towards frontend dev for example).
+This means you should ensure, for example with a CS heavy resume, that (software engineering OR software) and optionally based on the resume (frontend OR backend etc.) are added in an all encompassing way using OR's and splitting keywords effectively.
+AND's are NOT to be used as they can narrow the search extremely quickly, remember it is only job TITLE's that we are currently filtering for, not descriptions. Place more specific keywords such as technologies or tools earlier in the query to give them more weight than the more general keywords such as DevOps or Site Reliability Engineer.
 
 Location_filter
 String
