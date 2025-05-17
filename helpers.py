@@ -4,6 +4,8 @@ from io import BytesIO
 from typing import Any, Dict, Mapping
 
 import openai
+from groq import Groq
+
 import requests
 import PyPDF2
 from dotenv import load_dotenv
@@ -21,13 +23,20 @@ from models import (
 load_dotenv()
 RAPIDAPI_KEY = os.getenv("RAPIDAPI_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
+# Check for RapidAPI key and at least one LLM key
 if not RAPIDAPI_KEY:
     raise RuntimeError("RAPIDAPI_KEY missing in environment/.env")
-if not OPENAI_API_KEY:
-    raise RuntimeError("OPENAI_API_KEY missing in environment/.env")
+if not (OPENAI_API_KEY or GROQ_API_KEY):
+    raise RuntimeError("OPENAI_API_KEY (or GROQ_API_KEY) missing in environment/.env")
 
+# Initialize OpenAI and Groq clients
 openai.api_key = OPENAI_API_KEY
+client = Groq(
+    api_key=os.environ.get("GROQ_API_KEY"),  # This is the default and can be omitted
+)
+
 COMMON_HEADERS = {"x-rapidapi-key": RAPIDAPI_KEY}
 
 
@@ -94,34 +103,52 @@ def _pdf_to_text(pdf_bytes: bytes) -> str:
 _FILTER_DOC = """
 You are an API filter generator. Your job is to analyse résumés
 and output **ONLY** a JSON object with the most specific filters you can derive,
-using the keys listed below. If a filter cannot be inferred with high
-confidence, leave it out completely. Never guess.
+using the keys listed below.
 
-Valid JSON keys (duplicate keys across APIs appear only once):
-    title_filter
-    advanced_title_filter
-    location_filter
-    description_filter
-    description_type
-    remote                (true | false)
-    agency                (true | false)
-    include_ai            (true | false)
-    ai_work_arrangement_filter
-    limit                 (10‑100)
-    offset
-    organization_filter
-    source
-    ai_employment_type_filter
-    ai_has_salary         (true | false)
-    ai_experience_level_filter
-    ai_visa_sponsorship_filter
-    include_li            (true | false)
-    li_organization_slug_filter
-    li_organization_slug_exclusion_filter
-    li_industry_filter
-    li_organization_specialties_filter
-    li_organization_description_filter
-    date_filter
+Valid JSON keys:
+    advanced_title_filter         
+    location_filter       
+
+API documentation for these query parameters:
+
+advanced_title_filter
+String
+
+Advanced Title filter which enables more features like parenthesis, 'AND', and prefix searching.
+
+Phrares (two words or more) always need to be single quoted or use the operator <->
+
+Instead of using natural language like 'OR' you need to use operators like:
+
+    & (AND)
+    | (OR)
+    ! (NOT)
+    <-> (FOLLOWED BY)
+    ' ' (FOLLOWED BY alternative, does not work with 6. Prefix Wildcard)
+    :* (Prefix Wildcard)
+
+For example:
+
+(AI | 'Machine Learning' | 'Robotics') & ! Marketing
+
+Will return all jobs with ai, or machine learning, or robotics in the title except titles with marketing
+
+Project <-> Manag:*
+
+Will return jobs like Project Manager or Project Management
+
+Your goal when crafting a advanced_title_filter based on a resume is to MAXIMIZE the breadth of jobs that the API returns while still remaining specific to their skills and experience.
+This means you should ensure, for example with a CS heavy resume, that (software engineering OR software) and optionally based on the resume (frontend OR backend etc.) are added in an all encompassing way using OR's and splitting keywords effectively.
+AND's are NOT to be used as they can narrow the search extremely quickly, remember it is only job TITLE's that we are currently filtering for, not descriptions. Place more specific keywords such as technologies or tools earlier in the query to give them more weight than the more general keywords such as DevOps or Site Reliability Engineer.
+
+Location_filter
+String
+
+Filter on location. Please do not search on abbreviations like US, UK, NYC. Instead, search on full names like United States, New York, United Kingdom.
+
+You may filter on more than one location in a single API call using the OR parameter. For example: Dubai OR Netherlands OR Belgium
+
+With this one, you should avoid limiting to a specific city and default to the state if known, or country if not. If options are specified on the resume, use them.
 
 Output format **strictly**:
 ```json
@@ -146,17 +173,23 @@ def _build_resume_prompt(resume_text: str) -> str:
 # ---------------------------------------------------------------------------
 
 def generate_filters_from_resume(pdf_bytes: bytes) -> LLMGeneratedFilters:
+    # Convert PDF resume to text for LLM ingestion
     resume_text = _pdf_to_text(pdf_bytes)
-    response = openai.chat.completions.create(
-        model="gpt-4o-mini",
+
+    # Use Groq to generate filters
+    response = client.chat.completions.create(
+        model="llama-3.1-8b-instant",
         messages=[
-            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "system", "content": "You are a helpful job hunting assistant, the goal is to maximize the breadth of jobs that the user can and should apply to, "
+                                          "while also giving them the jobs they are most likely to desire and do well at from the information available to you."},
             {"role": "user", "content": _build_resume_prompt(resume_text)},
         ],
-        temperature=0.1,
+        temperature=0.5,
     )
-
     content = response.choices[0].message.content.strip()
+    if not content:
+        raise ValueError("Empty response from LLM")
+
     # Ensure pure JSON
     json_str = content.split("```json")[-1].split("```")[0] if "```" in content else content
     raw_filters = json.loads(json_str)

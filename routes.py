@@ -9,6 +9,7 @@ router = APIRouter()
 @router.get("/fetch_internships")
 async def fetch_internships(request: Request):
     try:
+        print(request.query_params)
         return helpers.fetch_internships(dict(request.query_params))
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
@@ -17,6 +18,7 @@ async def fetch_internships(request: Request):
 @router.get("/fetch_jobs")
 async def fetch_jobs(request: Request):
     try:
+        print(request)
         return helpers.fetch_jobs(dict(request.query_params))
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
@@ -25,6 +27,7 @@ async def fetch_jobs(request: Request):
 @router.get("/fetch_yc_jobs")
 async def fetch_yc_jobs(request: Request):
     try:
+        print(request.query_params)
         return helpers.fetch_yc_jobs(dict(request.query_params))
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
@@ -40,6 +43,12 @@ async def test_llm_resume_parsing(resume: UploadFile = File(...)):
 
     try:
         pdf_bytes = await resume.read()
-        return helpers.generate_filters_from_resume(pdf_bytes)
+        filters = helpers.generate_filters_from_resume(pdf_bytes)
+        if not filters:
+            raise HTTPException(status_code=400, detail="No filters generated from the résumé")
+        
+        print("Generated filters:", filters)
+
+        return filters
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
