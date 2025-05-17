@@ -1,0 +1,50 @@
+{
+    "internships": {
+        "title_filter": "Systems Administrator",
+        "advanced_title_filter": null,
+        "location_filter": "College Station, TX",
+        "description_filter": null,
+        "description_type": null,
+        "remote": false,
+        "offset": null,
+        "date_filter": null,
+        "agency": null,
+        "include_ai": null,
+        "ai_work_arrangement_filter": null
+    },
+    "jobs": {
+        "title_filter": "Systems Administrator",
+        "advanced_title_filter": null,
+        "location_filter": "College Station, TX",
+        "description_filter": null,
+        "description_type": null,
+        "remote": false,
+        "offset": null,
+        "date_filter": null,
+        "limit": 10,
+        "organization_filter": null,
+        "source": null,
+        "include_ai": null,
+        "ai_employment_type_filter": null,
+        "ai_work_arrangement_filter": null,
+        "ai_has_salary": null,
+        "ai_experience_level_filter": null,
+        "ai_visa_sponsorship_filter": null,
+        "include_li": null,
+        "li_organization_slug_filter": null,
+        "li_organization_slug_exclusion_filter": null,
+        "li_industry_filter": null,
+        "li_organization_specialties_filter": null,
+        "li_organization_description_filter": null
+    },
+    "yc_jobs": {
+        "title_filter": "Systems Administrator",
+        "advanced_title_filter": null,
+        "location_filter": "College Station, TX",
+        "description_filter": null,
+        "description_type": null,
+        "remote": false,
+        "offset": null,
+        "date_filter": null
+    }
+}
