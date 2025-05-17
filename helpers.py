@@ -4,6 +4,8 @@ from io import BytesIO
 from typing import Any, Dict, Mapping
 
 import openai
+from groq import Groq
+
 import requests
 import PyPDF2
 from dotenv import load_dotenv
@@ -21,13 +23,20 @@ from models import (
 load_dotenv()
 RAPIDAPI_KEY = os.getenv("RAPIDAPI_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
+# Check for RapidAPI key and at least one LLM key
 if not RAPIDAPI_KEY:
     raise RuntimeError("RAPIDAPI_KEY missing in environment/.env")
-if not OPENAI_API_KEY:
-    raise RuntimeError("OPENAI_API_KEY missing in environment/.env")
+if not (OPENAI_API_KEY or GROQ_API_KEY):
+    raise RuntimeError("OPENAI_API_KEY (or GROQ_API_KEY) missing in environment/.env")
 
+# Initialize OpenAI and Groq clients
 openai.api_key = OPENAI_API_KEY
+client = Groq(
+    api_key=os.environ.get("GROQ_API_KEY"),  # This is the default and can be omitted
+)
+
 COMMON_HEADERS = {"x-rapidapi-key": RAPIDAPI_KEY}
 
 
@@ -94,8 +103,8 @@ def _pdf_to_text(pdf_bytes: bytes) -> str:
 _FILTER_DOC = """
 You are an API filter generator. Your job is to analyse résumés
 and output **ONLY** a JSON object with the most specific filters you can derive,
-using the keys listed below. If a filter cannot be inferred with high
-confidence, leave it out completely. Never guess.
+using the keys listed below. If a filter cannot be inferred with decent
+confidence, leave it out completely. Try not to guess, but a meaningful and somewhat likely filter is better than no filter, unless it is genuinely impossible to assume a param.
 
 Valid JSON keys (duplicate keys across APIs appear only once):
     title_filter
@@ -146,17 +155,23 @@ def _build_resume_prompt(resume_text: str) -> str:
 # ---------------------------------------------------------------------------
 
 def generate_filters_from_resume(pdf_bytes: bytes) -> LLMGeneratedFilters:
+    # Convert PDF resume to text for LLM ingestion
     resume_text = _pdf_to_text(pdf_bytes)
-    response = openai.chat.completions.create(
-        model="gpt-4o-mini",
+
+    # Use Groq to generate filters
+    response = client.chat.completions.create(
+        model="llama-3.1-8b-instant",
         messages=[
-            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "system", "content": "You are a helpful job hunting assistant, the goal is to maximize the breadth of jobs that the user can and should apply to, "
+                                          "while also giving them the jobs they are most likely to desire and do well at from the information available to you."},
             {"role": "user", "content": _build_resume_prompt(resume_text)},
         ],
-        temperature=0.1,
+        temperature=0.5,
     )
-
     content = response.choices[0].message.content.strip()
+    if not content:
+        raise ValueError("Empty response from LLM")
+
     # Ensure pure JSON
     json_str = content.split("```json")[-1].split("```")[0] if "```" in content else content
     raw_filters = json.loads(json_str)

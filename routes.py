@@ -40,6 +40,12 @@ async def test_llm_resume_parsing(resume: UploadFile = File(...)):
 
     try:
         pdf_bytes = await resume.read()
-        return helpers.generate_filters_from_resume(pdf_bytes)
+        filters = helpers.generate_filters_from_resume(pdf_bytes)
+        if not filters:
+            raise HTTPException(status_code=400, detail="No filters generated from the résumé")
+        
+        print("Generated filters:", filters)
+
+        return filters
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
