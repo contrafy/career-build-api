@@ -287,4 +287,4 @@ def _rate_jobs_against_resume(jobs: list[dict], resume_text: str | None = None):
         ratings = json.loads(json_str)
         print("Job-fit ratings:", ratings)           # <-- for now just log
     except Exception as e:
-        print("⚠️  rating LLM call failed:", e)
+        print("rating LLM call failed:", e)
