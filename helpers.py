@@ -2,6 +2,7 @@ import json
 import os
 from io import BytesIO
 from typing import Any, Dict, Mapping
+import re
 
 import openai
 from groq import Groq
@@ -54,6 +55,26 @@ def _sanitize_params(params: Mapping[str, Any]) -> Dict[str, str]:
             clean[k] = str(v)
     return clean
 
+_DELIMS = re.compile(r"(\(|\)|\||<->|!)")          # we keep these untouched
+
+def _quote_advanced_terms(expr: str) -> str:
+    """
+    ('foo bar' | baz | C++)  ->  ('foo bar' | 'baz' | 'C++')
+    Parentheses and operators remain in their original positions.
+    """
+    out: list[str] = []
+    for chunk in _DELIMS.split(expr):              # yields delimiters *and* gaps
+        if chunk in {"(", ")", "|", "<->", "!"}:
+            out.append(chunk)                      # keep delimiters as‑is
+        else:
+            stripped = chunk.strip()
+            if not stripped:                       # pure whitespace ⇒ preserve
+                out.append(chunk)
+            elif stripped[0] in {"'", '"'}:        # already quoted
+                out.append(stripped)
+            else:                                  # wrap bare term
+                out.append(f"'{stripped}'")
+    return "".join(out)                            # join w/out inserting extras
 
 def _call_api(url: str, host: str, params: Mapping[str, Any]) -> dict:
     headers = {**COMMON_HEADERS, "x-rapidapi-host": host}
@@ -101,63 +122,53 @@ def _pdf_to_text(pdf_bytes: bytes) -> str:
 #  LLM prompt engineering
 # --------------------------------------------------------------------------- #
 _FILTER_DOC = """
-You are an API filter generator. Your job is to analyse résumés
-and output **ONLY** a JSON object with the most specific filters you can derive,
-using the keys listed below.
+You are an **API filter generator**.  
+Analyse the résumé and output **only** a JSON object using the keys below.
 
-Valid JSON keys:
-    advanced_title_filter         
-    location_filter       
+Valid JSON keys  
+    advanced_title_filter    ← a single, gigantic OR-clause  
+    location_filter
 
-API documentation for these query parameters:
+──────────────────────────────────────────────────────────────────────────────
+advanced_title_filter  (STRING)
+──────────────────────────────────────────────────────────────────────────────
+• Build **one** parenthesised clause that contains **only**:  
+  → the pipe operator `|` (OR)  
+  → the keywords / phrases you extracted from the résumé  
+  *No other operators* (`&`, `!`, `<->`, `:*`, etc.) may appear.
 
-advanced_title_filter
-String
+• **Wrap every term in single quotes**, even single-word terms, e.g.  
+  `'Python' | 'Machine Learning' | 'C++'`
 
-Advanced Title filter which enables more features like parenthesis, 'AND', and prefix searching.
+• Example of a valid output:  
+  `('Software Engineer' | 'DevOps' | 'C++' | 'Kubernetes' | 'Cloud Computing')`
 
-Phrares (two words or more) always need to be single quoted or use the operator <->
+• Your goal is to **maximise breadth** while staying relevant to the candidate's
+  skills.  Split multi-word concepts into their shortest useful forms and
+  include both singular & broader synonyms where appropriate.
 
-Instead of using natural language like 'OR' you need to use operators like:
+──────────────────────────────────────────────────────────────────────────────
+location_filter  (STRING)
+──────────────────────────────────────────────────────────────────────────────
+• Use full names only (“United States”, “New York”, “United Kingdom”).  
+• Combine multiple locations with **OR**, e.g.  
+  `United States OR Canada OR Netherlands`  
+• Prefer state or country-level granularity unless the résumé clearly specifies
+  a city. However, ensure to place the more granular location(s) first in the query to maintain relevance, 
+  eg. return 'Michigan OR United States' instead of 'United States OR Michigan'.
 
-    & (AND)
-    | (OR)
-    ! (NOT)
-    <-> (FOLLOWED BY)
-    ' ' (FOLLOWED BY alternative, does not work with 6. Prefix Wildcard)
-    :* (Prefix Wildcard)
-
-For example:
-
-(AI | 'Machine Learning' | 'Robotics') & ! Marketing
-
-Will return all jobs with ai, or machine learning, or robotics in the title except titles with marketing
-
-Project <-> Manag:*
-
-Will return jobs like Project Manager or Project Management
-
-Your goal when crafting a advanced_title_filter based on a resume is to MAXIMIZE the breadth of jobs that the API returns while still remaining specific to their skills and experience.
-This means you should ensure, for example with a CS heavy resume, that (software engineering OR software) and optionally based on the resume (frontend OR backend etc.) are added in an all encompassing way using OR's and splitting keywords effectively.
-AND's are NOT to be used as they can narrow the search extremely quickly, remember it is only job TITLE's that we are currently filtering for, not descriptions. Place more specific keywords such as technologies or tools earlier in the query to give them more weight than the more general keywords such as DevOps or Site Reliability Engineer.
-
-Location_filter
-String
-
-Filter on location. Please do not search on abbreviations like US, UK, NYC. Instead, search on full names like United States, New York, United Kingdom.
-
-You may filter on more than one location in a single API call using the OR parameter. For example: Dubai OR Netherlands OR Belgium
-
-With this one, you should avoid limiting to a specific city and default to the state if known, or country if not. If options are specified on the resume, use them.
-
-Output format **strictly**:
+──────────────────────────────────────────────────────────────────────────────
+OUTPUT  (STRICT)
+──────────────────────────────────────────────────────────────────────────────
 ```json
 {
-  "<key>": <value>,          # include only when value is known
-  "...": "..."
+  "advanced_title_filter": "(...)",
+  "location_filter": "..."
 }
 ```
-No explanations, no additional keys.
+
+Include a key only if you have a value for it.
+No comments, no additional keys, no markdown fences outside the JSON block.
 """
 
 def _build_resume_prompt(resume_text: str) -> str:
@@ -178,13 +189,13 @@ def generate_filters_from_resume(pdf_bytes: bytes) -> LLMGeneratedFilters:
 
     # Use Groq to generate filters
     response = client.chat.completions.create(
-        model="llama-3.1-8b-instant",
+        model="llama-3.3-70b-versatile",
         messages=[
             {"role": "system", "content": "You are a helpful job hunting assistant, the goal is to maximize the breadth of jobs that the user can and should apply to, "
                                           "while also giving them the jobs they are most likely to desire and do well at from the information available to you."},
             {"role": "user", "content": _build_resume_prompt(resume_text)},
         ],
-        temperature=0.5,
+        temperature=0.2,
     )
     content = response.choices[0].message.content.strip()
     if not content:
@@ -193,6 +204,13 @@ def generate_filters_from_resume(pdf_bytes: bytes) -> LLMGeneratedFilters:
     # Ensure pure JSON
     json_str = content.split("```json")[-1].split("```")[0] if "```" in content else content
     raw_filters = json.loads(json_str)
+
+    # Wrap terms in single quotes to appease the postgres gods
+    """
+    atf = raw_filters.get("advanced_title_filter")
+    if isinstance(atf, str):
+        raw_filters["advanced_title_filter"] = _quote_advanced_terms(atf)
+    """
 
     # Fan‑out into each API model
     internship_f = InternshipFilters(**raw_filters).dict(exclude_none=True)
