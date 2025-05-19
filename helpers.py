@@ -55,8 +55,21 @@ def _sanitize_params(params: Mapping[str, Any]) -> Dict[str, str]:
             clean[k] = str(v)
     return clean
 
+# --------------------------------------------------------------------------- #
+# ❶  small util: pull the list out of any RapidAPI payload shape
+# --------------------------------------------------------------------------- #
+def _extract_jobs_list(payload: object) -> list[dict]:
+    if isinstance(payload, list):
+        return payload
+    if isinstance(payload, dict):
+        for k in ("internships", "jobs", "yc_jobs", "results", "data"):
+            if k in payload and isinstance(payload[k], list):
+                return payload[k]
+    return []                                         # fallback
+
 _DELIMS = re.compile(r"(\(|\)|\||<->|!)")          # we keep these untouched
 
+# unused for now
 def _quote_advanced_terms(expr: str) -> str:
     """
     ('foo bar' | baz | C++)  ->  ('foo bar' | 'baz' | 'C++')
@@ -84,32 +97,38 @@ def _call_api(url: str, host: str, params: Mapping[str, Any]) -> dict:
     return resp.json()
 
 
-def fetch_internships(params: Mapping[str, Any]) -> dict:
-    return _call_api(
+def fetch_internships(params: Mapping[str, Any], resume_text: str | None = None) -> dict:
+    payload = _call_api(
         "https://internships-api.p.rapidapi.com/active-jb-7d",
         "internships-api.p.rapidapi.com",
         params,
     )
+    _rate_jobs_against_resume(_extract_jobs_list(payload), resume_text)
+    return payload
 
 
-def fetch_jobs(params: Mapping[str, Any]) -> dict:
-    return _call_api(
+def fetch_jobs(params: Mapping[str, Any], resume_text: str | None = None) -> dict:
+    payload = _call_api(
         "https://active-jobs-db.p.rapidapi.com/active-ats-7d",
         "active-jobs-db.p.rapidapi.com",
         params,
     )
+    _rate_jobs_against_resume(_extract_jobs_list(payload), resume_text)
+    return payload
 
 
-def fetch_yc_jobs(params: Mapping[str, Any]) -> dict:
-    return _call_api(
+def fetch_yc_jobs(params: Mapping[str, Any], resume_text: str | None = None) -> dict:
+    payload = _call_api(
         "https://free-y-combinator-jobs-api.p.rapidapi.com/active-jb-7d",
         "free-y-combinator-jobs-api.p.rapidapi.com",
         params,
     )
+    _rate_jobs_against_resume(_extract_jobs_list(payload), resume_text)
+    return payload
 
 
 # --------------------------------------------------------------------------- #
-#  Résumé → plaintext
+#  Convert PDF documents (resume/CV) to plaintext for LLM ingestion
 # --------------------------------------------------------------------------- #
 def _pdf_to_text(pdf_bytes: bytes) -> str:
     """Return plaintext extracted from a PDF."""
@@ -119,7 +138,7 @@ def _pdf_to_text(pdf_bytes: bytes) -> str:
 
 
 # --------------------------------------------------------------------------- #
-#  LLM prompt engineering
+#  LLM prompts
 # --------------------------------------------------------------------------- #
 _FILTER_DOC = """
 You are an **API filter generator**.  
@@ -222,3 +241,51 @@ def generate_filters_from_resume(pdf_bytes: bytes) -> LLMGeneratedFilters:
         jobs=job_f or None,
         yc_jobs=yc_f or None,
     )
+
+# --------------------------------------------------------------------------- #
+# ❷  call an LLM to score every job 0.0‑10.0 and print the result
+# --------------------------------------------------------------------------- #
+def _rate_jobs_against_resume(jobs: list[dict], resume_text: str | None = None):
+    if not jobs:                                     # nothing to do
+        return
+
+    # keep only fields that help the LLM
+    shortlist = [
+        {
+            "id": j.get("id"),
+            "date_posted": j.get("date_posted"),
+            "title": j.get("title"),
+            "organization": j.get("organization"),
+            "description_text": j.get("description_text"),
+        }
+        for j in jobs
+    ]
+
+    system_msg = (
+        "You are a career-match assistant.\n"
+        "Rate each job 0.0-10.0 (one decimal place) for how well it fits the "
+        "candidate's résumé.  Return ONLY a JSON object whose keys are the "
+        "job IDs and whose values are the ratings.  No other text."
+    )
+
+    user_parts = []
+    if resume_text:
+        user_parts.append("Résumé:\n" + resume_text[:8000])
+    user_parts.append("Job listings JSON:\n" + json.dumps(shortlist, ensure_ascii=False))
+    user_msg = "\n\n".join(user_parts)
+
+    try:
+        resp = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[
+                {"role": "system", "content": system_msg},
+                {"role": "user",    "content": user_msg},
+            ],
+            temperature=0.5,
+        )
+        raw = resp.choices[0].message.content.strip()
+        json_str = raw.split("```json")[-1].split("```")[0] if "```" in raw else raw
+        ratings = json.loads(json_str)
+        print("Job‑fit ratings:", ratings)           # <-- for now just log
+    except Exception as e:
+        print("⚠️  rating LLM call failed:", e)
