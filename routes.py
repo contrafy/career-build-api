@@ -1,34 +1,40 @@
 from fastapi import APIRouter, HTTPException, Request, UploadFile, File
+from pydantic import BaseModel
 
 import helpers
-from models import LLMGeneratedFilters
+from models import LLMGeneratedFilters, JobFilters
 
 router = APIRouter()
 
+class SearchRequest(BaseModel):
+    filters: JobFilters
+    resumeText: str | None = None   # plain résumé text (can be null)
 
-@router.get("/fetch_internships")
-async def fetch_internships(request: Request):
+@router.post("/fetch_internships")
+async def fetch_internships(req: SearchRequest):
     try:
-        print(request.query_params)
-        return helpers.fetch_internships(dict(request.query_params))
+        print(req)
+        data = helpers.fetch_internships(req.filters.as_query(), req.resumeText)
+        return data
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
 
 
-@router.get("/fetch_jobs")
-async def fetch_jobs(request: Request):
+@router.post("/fetch_jobs")
+async def fetch_jobs(req: SearchRequest):
     try:
-        print(request)
-        return helpers.fetch_jobs(dict(request.query_params))
+        print(req)
+        data = helpers.fetch_jobs(req.filters.as_query(), req.resumeText)
+        return data
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
 
 
-@router.get("/fetch_yc_jobs")
-async def fetch_yc_jobs(request: Request):
+@router.post("/fetch_yc_jobs")
+async def fetch_yc_jobs(req: SearchRequest):
     try:
-        print(request.query_params)
-        return helpers.fetch_yc_jobs(dict(request.query_params))
+        print(req)
+        return helpers.fetch_yc_jobs(req.filters.as_query(), req.resumeText)
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
 

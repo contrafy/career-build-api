@@ -42,7 +42,7 @@ client = Groq(
 COMMON_HEADERS = {"x-rapidapi-key": RAPIDAPI_KEY}
 
 # ─── global in‑mem store (top of file, after COMMON_HEADERS) ───────────────
-RESUME_CACHE: dict[str, str] = {}     # resume_id → plaintext résumé
+# RESUME_CACHE: dict[str, str] = {}     # resume_id → plaintext résumé
 
 
 # --------------------------------------------------------------------------- #
@@ -77,18 +77,19 @@ def _extract_jobs_list(payload: object) -> list[dict]:
 # _DELIMS = re.compile(r"(\(|\)|\||<->|!)")
 
 # ─── helper to pop resume_id + convert to text ─────────────────────────────
+"""
 def _pull_resume(params: Mapping[str, Any]) -> str | None:
-    """
+    
     Remove resume_id from the params dict (so it never reaches RapidAPI)
     and return the cached plaintext (if we have it).
-    """
+    
     if isinstance(params, dict):
         resume_id = params.pop("resume_id", None)
         print("DEBUG params incoming:", params)
         if resume_id:
             return RESUME_CACHE.get(resume_id)
     return None
-
+"""
 # unused for now
 def _quote_advanced_terms(expr: str) -> str:
     """
@@ -117,9 +118,7 @@ def _call_api(url: str, host: str, params: Mapping[str, Any]) -> dict:
     return resp.json()
 
 
-def fetch_internships(params: Mapping[str, Any]) -> dict:
-    params = dict(params)                         # make a mutable copy
-    resume_text = _pull_resume(params)
+def fetch_internships(params: Mapping[str, Any], resume_text: str | None = None) -> dict:
     payload = _call_api(
         "https://internships-api.p.rapidapi.com/active-jb-7d",
         "internships-api.p.rapidapi.com",
@@ -129,9 +128,7 @@ def fetch_internships(params: Mapping[str, Any]) -> dict:
     return payload
 
 
-def fetch_jobs(params: Mapping[str, Any]) -> dict:
-    params = dict(params)
-    resume_text = _pull_resume(params)
+def fetch_jobs(params: Mapping[str, Any], resume_text: str | None = None) -> dict:
     payload = _call_api(
         "https://active-jobs-db.p.rapidapi.com/active-ats-7d",
         "active-jobs-db.p.rapidapi.com",
@@ -141,9 +138,7 @@ def fetch_jobs(params: Mapping[str, Any]) -> dict:
     return payload
 
 
-def fetch_yc_jobs(params: Mapping[str, Any]) -> dict:
-    params = dict(params)
-    resume_text = _pull_resume(params)
+def fetch_yc_jobs(params: Mapping[str, Any], resume_text: str | None = None) -> dict:
     payload = _call_api(
         "https://free-y-combinator-jobs-api.p.rapidapi.com/active-jb-7d",
         "free-y-combinator-jobs-api.p.rapidapi.com",
@@ -232,8 +227,8 @@ def generate_filters_from_resume(pdf_bytes: bytes) -> LLMGeneratedFilters:
     resume_text = _pdf_to_text(pdf_bytes)
 
     # cache and emit a UUID so future search requests can reference it
-    resume_id = str(uuid.uuid4())
-    RESUME_CACHE[resume_id] = resume_text
+    # resume_id = str(uuid.uuid4())
+    # RESUME_CACHE[resume_id] = resume_text
 
     # Use Groq to generate filters
     response = client.chat.completions.create(
@@ -270,7 +265,7 @@ def generate_filters_from_resume(pdf_bytes: bytes) -> LLMGeneratedFilters:
         jobs=job_f or None,
         yc_jobs=yc_f or None,
     ).dict(exclude_none=True)
-    result["resume_id"] = resume_id 
+    result["resumeText"] = resume_text
     return result
 
 # --------------------------------------------------------------------------- #
