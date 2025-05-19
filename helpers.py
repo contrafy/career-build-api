@@ -67,7 +67,7 @@ def _extract_jobs_list(payload: object) -> list[dict]:
                 return payload[k]
     return []                                         # fallback
 
-_DELIMS = re.compile(r"(\(|\)|\||<->|!)")          # we keep these untouched
+_DELIMS = re.compile(r"(\(|\)|\||<->|!)")
 
 # unused for now
 def _quote_advanced_terms(expr: str) -> str:
@@ -172,9 +172,8 @@ location_filter  (STRING)
 • Use full names only (“United States”, “New York”, “United Kingdom”).  
 • Combine multiple locations with **OR**, e.g.  
   `United States OR Canada OR Netherlands`  
-• Prefer state or country-level granularity unless the résumé clearly specifies
-  a city. However, ensure to place the more granular location(s) first in the query to maintain relevance, 
-  eg. return 'Michigan OR United States' instead of 'United States OR Michigan'.
+• Prefer state-level granularity unless the résumé clearly specifies
+  a city. Avoid countries unless the resume or other context mentions openness to multiple countries.
 
 ──────────────────────────────────────────────────────────────────────────────
 OUTPUT  (STRICT)
@@ -263,7 +262,7 @@ def _rate_jobs_against_resume(jobs: list[dict], resume_text: str | None = None):
 
     system_msg = (
         "You are a career-match assistant.\n"
-        "Rate each job 0.0-10.0 (one decimal place) for how well it fits the "
+        "Rate each job 0.0-10.0 (exactly one decimal place) for how well it fits the "
         "candidate's résumé.  Return ONLY a JSON object whose keys are the "
         "job IDs and whose values are the ratings.  No other text."
     )
@@ -286,6 +285,6 @@ def _rate_jobs_against_resume(jobs: list[dict], resume_text: str | None = None):
         raw = resp.choices[0].message.content.strip()
         json_str = raw.split("```json")[-1].split("```")[0] if "```" in raw else raw
         ratings = json.loads(json_str)
-        print("Job‑fit ratings:", ratings)           # <-- for now just log
+        print("Job-fit ratings:", ratings)           # <-- for now just log
     except Exception as e:
         print("⚠️  rating LLM call failed:", e)
