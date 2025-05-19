@@ -3,6 +3,7 @@ import os
 from io import BytesIO
 from typing import Any, Dict, Mapping
 import re
+import uuid
 
 import openai
 from groq import Groq
@@ -40,13 +41,19 @@ client = Groq(
 
 COMMON_HEADERS = {"x-rapidapi-key": RAPIDAPI_KEY}
 
+# ─── global in‑mem store (top of file, after COMMON_HEADERS) ───────────────
+RESUME_CACHE: dict[str, str] = {}     # resume_id → plaintext résumé
+
 
 # --------------------------------------------------------------------------- #
 #  RapidAPI helpers
 # --------------------------------------------------------------------------- #
+
 def _sanitize_params(params: Mapping[str, Any]) -> Dict[str, str]:
     clean: Dict[str, str] = {}
     for k, v in params.items():
+        if k == "resume_id":
+            continue
         if v is None or v == "":
             continue
         if isinstance(v, bool):
@@ -67,7 +74,20 @@ def _extract_jobs_list(payload: object) -> list[dict]:
                 return payload[k]
     return []                                         # fallback
 
-_DELIMS = re.compile(r"(\(|\)|\||<->|!)")
+# _DELIMS = re.compile(r"(\(|\)|\||<->|!)")
+
+# ─── helper to pop resume_id + convert to text ─────────────────────────────
+def _pull_resume(params: Mapping[str, Any]) -> str | None:
+    """
+    Remove resume_id from the params dict (so it never reaches RapidAPI)
+    and return the cached plaintext (if we have it).
+    """
+    if isinstance(params, dict):
+        resume_id = params.pop("resume_id", None)
+        print("DEBUG params incoming:", params)
+        if resume_id:
+            return RESUME_CACHE.get(resume_id)
+    return None
 
 # unused for now
 def _quote_advanced_terms(expr: str) -> str:
@@ -97,7 +117,9 @@ def _call_api(url: str, host: str, params: Mapping[str, Any]) -> dict:
     return resp.json()
 
 
-def fetch_internships(params: Mapping[str, Any], resume_text: str | None = None) -> dict:
+def fetch_internships(params: Mapping[str, Any]) -> dict:
+    params = dict(params)                         # make a mutable copy
+    resume_text = _pull_resume(params)
     payload = _call_api(
         "https://internships-api.p.rapidapi.com/active-jb-7d",
         "internships-api.p.rapidapi.com",
@@ -107,7 +129,9 @@ def fetch_internships(params: Mapping[str, Any], resume_text: str | None = None)
     return payload
 
 
-def fetch_jobs(params: Mapping[str, Any], resume_text: str | None = None) -> dict:
+def fetch_jobs(params: Mapping[str, Any]) -> dict:
+    params = dict(params)
+    resume_text = _pull_resume(params)
     payload = _call_api(
         "https://active-jobs-db.p.rapidapi.com/active-ats-7d",
         "active-jobs-db.p.rapidapi.com",
@@ -117,7 +141,9 @@ def fetch_jobs(params: Mapping[str, Any], resume_text: str | None = None) -> dic
     return payload
 
 
-def fetch_yc_jobs(params: Mapping[str, Any], resume_text: str | None = None) -> dict:
+def fetch_yc_jobs(params: Mapping[str, Any]) -> dict:
+    params = dict(params)
+    resume_text = _pull_resume(params)
     payload = _call_api(
         "https://free-y-combinator-jobs-api.p.rapidapi.com/active-jb-7d",
         "free-y-combinator-jobs-api.p.rapidapi.com",
@@ -205,6 +231,10 @@ def generate_filters_from_resume(pdf_bytes: bytes) -> LLMGeneratedFilters:
     # Convert PDF resume to text for LLM ingestion
     resume_text = _pdf_to_text(pdf_bytes)
 
+    # cache and emit a UUID so future search requests can reference it
+    resume_id = str(uuid.uuid4())
+    RESUME_CACHE[resume_id] = resume_text
+
     # Use Groq to generate filters
     response = client.chat.completions.create(
         model="llama-3.3-70b-versatile",
@@ -235,11 +265,13 @@ def generate_filters_from_resume(pdf_bytes: bytes) -> LLMGeneratedFilters:
     job_f        = JobFilters(**raw_filters).dict(exclude_none=True)
     yc_f         = YcFilters(**raw_filters).dict(exclude_none=True)
 
-    return LLMGeneratedFilters(
+    result = LLMGeneratedFilters(
         internships=internship_f or None,
         jobs=job_f or None,
         yc_jobs=yc_f or None,
-    )
+    ).dict(exclude_none=True)
+    result["resume_id"] = resume_id 
+    return result
 
 # --------------------------------------------------------------------------- #
 # ❷  call an LLM to score every job 0.0‑10.0 and print the result
@@ -269,6 +301,7 @@ def _rate_jobs_against_resume(jobs: list[dict], resume_text: str | None = None):
 
     user_parts = []
     if resume_text:
+        print("resume_text:", resume_text[:1000])
         user_parts.append("Résumé:\n" + resume_text[:8000])
     user_parts.append("Job listings JSON:\n" + json.dumps(shortlist, ensure_ascii=False))
     user_msg = "\n\n".join(user_parts)

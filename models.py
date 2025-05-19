@@ -16,8 +16,14 @@ class _BaseFilters(BaseModel):
     offset:              Optional[int]  = None
     date_filter:         Optional[str]  = None
 
+    # carries the client’s résumé cache key (never forwarded upstream)
+    resume_id:           Optional[str] = None
+
     def as_query(self) -> Dict[str, str | int]:
-        return {k: v for k, v in self.dict(exclude_none=True).items()}
+        """Return only the fields we want to pass to RapidAPI."""
+        d = self.dict(exclude_none=True)
+        d.pop("resume_id", None)                  # strip it right here
+        return d
 
 
 class InternshipFilters(_BaseFilters):
