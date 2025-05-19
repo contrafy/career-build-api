@@ -17,7 +17,7 @@ class _BaseFilters(BaseModel):
     date_filter:         Optional[str]  = None
 
     # carries the client’s résumé cache key (never forwarded upstream)
-    resume_id:           Optional[str] = None
+    # resume_id:           Optional[str] = None
 
     def as_query(self) -> Dict[str, str | int]:
         """Return only the fields we want to pass to RapidAPI."""
