@@ -58,9 +58,8 @@ class YcFilters(_BaseFilters):
 
 class LLMGeneratedFilters(BaseModel):
     """
-    Container that may hold subsets for internships / jobs / yc.
-    Keys absent = param not detected / not relevant.
+    Final filter set produced from a résumé.
+    Values are simple **comma‑separated** strings with *no* quotes.
     """
-    internships: Optional[InternshipFilters] = None
-    jobs:        Optional[JobFilters]        = None
-    yc_jobs:     Optional[YcFilters]         = None
+    advanced_title_filter: str
+    location_filter: Optional[str] = None
