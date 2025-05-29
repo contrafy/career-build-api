@@ -113,33 +113,34 @@ def _call_api(url: str, host: str, params: Mapping[str, Any]) -> dict:
     return resp.json()
 
 
-def fetch_internships(params: Mapping[str, Any], resume_text: str | None = None) -> dict:
+def fetch_internships(params: Mapping[str, Any]) -> dict:
     payload = _call_api(
         "https://internships-api.p.rapidapi.com/active-jb-7d",
         "internships-api.p.rapidapi.com",
         params,
     )
-    _rate_jobs_against_resume(_extract_jobs_list(payload), resume_text)
+    # _rate_jobs_against_resume(_extract_jobs_list(payload), resume_text)
     return payload
 
 
-def fetch_jobs(params: Mapping[str, Any], resume_text: str | None = None) -> dict:
+def fetch_jobs(params: Mapping[str, Any]) -> dict:
     payload = _call_api(
         "https://active-jobs-db.p.rapidapi.com/active-ats-7d",
         "active-jobs-db.p.rapidapi.com",
         params,
     )
-    _rate_jobs_against_resume(_extract_jobs_list(payload), resume_text)
+    # _rate_jobs_against_resume(_extract_jobs_list(payload), resume_text)
     return payload
 
 
-def fetch_yc_jobs(params: Mapping[str, Any], resume_text: str | None = None) -> dict:
+def fetch_yc_jobs(params: Mapping[str, Any]) -> dict:
+    print(params)  # <-- for debugging
     payload = _call_api(
         "https://free-y-combinator-jobs-api.p.rapidapi.com/active-jb-7d",
         "free-y-combinator-jobs-api.p.rapidapi.com",
         params,
     )
-    _rate_jobs_against_resume(_extract_jobs_list(payload), resume_text)
+    # _rate_jobs_against_resume(_extract_jobs_list(payload), resume_text)
     return payload
 
 

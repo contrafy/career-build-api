@@ -14,7 +14,7 @@ class SearchRequest(BaseModel):
 async def fetch_internships(req: SearchRequest):
     try:
         print(req)
-        data = helpers.fetch_internships(req.filters.as_query(), req.resumeText)
+        data = helpers.fetch_internships(req.filters.as_query())
         return data
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
@@ -24,7 +24,7 @@ async def fetch_internships(req: SearchRequest):
 async def fetch_jobs(req: SearchRequest):
     try:
         print(req)
-        data = helpers.fetch_jobs(req.filters.as_query(), req.resumeText)
+        data = helpers.fetch_jobs(req.filters.as_query())
         return data
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
@@ -34,7 +34,7 @@ async def fetch_jobs(req: SearchRequest):
 async def fetch_yc_jobs(req: SearchRequest):
     try:
         print(req)
-        return helpers.fetch_yc_jobs(req.filters.as_query(), req.resumeText)
+        return helpers.fetch_yc_jobs(req.filters.as_query())
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
 
