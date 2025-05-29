@@ -16,8 +16,14 @@ class _BaseFilters(BaseModel):
     offset:              Optional[int]  = None
     date_filter:         Optional[str]  = None
 
+    # carries the client’s résumé cache key (never forwarded upstream)
+    # resume_id:           Optional[str] = None
+
     def as_query(self) -> Dict[str, str | int]:
-        return {k: v for k, v in self.dict(exclude_none=True).items()}
+        """Return only the fields we want to pass to RapidAPI."""
+        d = self.dict(exclude_none=True)
+        d.pop("resume_id", None)                  # strip it right here
+        return d
 
 
 class InternshipFilters(_BaseFilters):
@@ -52,9 +58,8 @@ class YcFilters(_BaseFilters):
 
 class LLMGeneratedFilters(BaseModel):
     """
-    Container that may hold subsets for internships / jobs / yc.
-    Keys absent = param not detected / not relevant.
+    Final filter set produced from a résumé.
+    Values are simple **comma‑separated** strings with *no* quotes.
     """
-    internships: Optional[InternshipFilters] = None
-    jobs:        Optional[JobFilters]        = None
-    yc_jobs:     Optional[YcFilters]         = None
+    advanced_title_filter: str
+    location_filter: Optional[str] = None
