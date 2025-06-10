@@ -61,6 +61,27 @@ def _sanitize_params(params: Mapping[str, Any]) -> Dict[str, str]:
 
 _DELIMS = re.compile(r"(\(|\)|\||<->|!)")          # we keep these untouched
 
+def _map_adzuna(item: dict) -> dict:
+    """
+    Convert ONE raw Adzuna record → JobListing interface used in JobCard.tsx
+    """
+    loc = item.get("location") or {}
+    comp = item.get("company") or {}
+
+    return {
+        "id":           str(item.get("id")),                 # JobCard.id is str
+        "title":        item.get("title"),
+        "organization": comp.get("display_name"),
+        "locations_derived": [
+            loc.get("display_name")
+        ] if loc.get("display_name") else [],
+        "location_type": None,                               # Adzuna has no flag
+        "url":          item.get("redirect_url"),
+        "date_posted":  item.get("created"),                 # e.g. "2024-12-01T17:34:00Z"
+        "date_created": item.get("created"),
+        # "rating" left out – LLM will add later
+    }
+
 def _quote_advanced_terms(expr: str) -> str:
     """
     ('foo bar' | baz | C++)  ->  ('foo bar' | 'baz' | 'C++')
@@ -150,19 +171,21 @@ def fetch_adzuna_jobs(filters: Mapping[str, Any]) -> dict:
 
     raw_loc = (filters.get("location_filter") or "").strip()
     if raw_loc:
-        p["where"] = raw_loc.split(" OR ", 1)[0].strip()   # first keyword
+        p["where"] = raw_loc.split(" OR ", 1)[0].strip()
 
     try:
-        p["distance"] = int(filters.get("distance", 50))   # override or default
+        p["distance"] = int(filters.get("distance", 50))
     except ValueError:
         p["distance"] = 50
 
-    limit  = int(filters.get("limit", 50))
-    offset = int(filters.get("offset", 0))
-    p["results_per_page"] = limit
-    p["page"] = offset // limit + 1
+    limit = int(filters.get("limit", 50))    
+    p["results_per_page"] = limit            
+    p["page"] = 1                            
 
-    return _call_adzuna(p)
+    raw = _call_adzuna(p)
+    mapped = [_map_adzuna(r) for r in raw.get("results", [])]
+    return {"results": mapped}
+
 
 # --------------------------------------------------------------------------- #
 #  Résumé → plaintext
