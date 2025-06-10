@@ -1,6 +1,8 @@
 from fastapi import APIRouter, HTTPException, Request, UploadFile, File
 
 import helpers
+import re
+from typing import Any, Mapping
 from models import LLMGeneratedFilters
 
 router = APIRouter()
@@ -29,6 +31,14 @@ async def fetch_yc_jobs(request: Request):
     try:
         print(request.query_params)
         return helpers.fetch_yc_jobs(dict(request.query_params))
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc))
+    
+@router.get("/fetch_adzuna_jobs")
+async def fetch_adzuna_jobs_route(request: Request):
+    try:
+        print(request.query_params)
+        return helpers.fetch_adzuna_jobs(dict(request.query_params))
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
 

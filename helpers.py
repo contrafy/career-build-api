@@ -25,6 +25,10 @@ load_dotenv()
 RAPIDAPI_KEY = os.getenv("RAPIDAPI_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+ADZUNA_APP_ID  = os.getenv("ADZUNA_APP_ID")
+ADZUNA_APP_KEY = os.getenv("ADZUNA_APP_KEY")
+if not (ADZUNA_APP_ID and ADZUNA_APP_KEY):
+    raise RuntimeError("ADZUNA_APP_ID / ADZUNA_APP_KEY missing in environment/.env")
 
 # Check for RapidAPI key and at least one LLM key
 if not RAPIDAPI_KEY:
@@ -83,6 +87,34 @@ def _call_api(url: str, host: str, params: Mapping[str, Any]) -> dict:
     resp.raise_for_status()
     return resp.json()
 
+def _call_adzuna(params: Mapping[str, Any]) -> dict:
+    """
+    Invoke Adzuna’s `/v1/api/jobs/{country}/search/{page}` endpoint.
+
+    Required path params:
+        country – ISO-3166 code (default “us”)
+        page    – 1-based page index
+
+    All other search options go in the query-string.
+    """
+    # ----------------------------- path parts ------------------------------
+    country = str(params.pop("country", "us")).lower()
+    page    = int(params.pop("page",    1))                # defaults to 1
+
+    url = f"https://api.adzuna.com/v1/api/jobs/{country}/search/{page}"
+
+    # ----------------------------- query params ---------------------------
+    query             = _sanitize_params(params)
+    query["app_id"]   = ADZUNA_APP_ID
+    query["app_key"]  = ADZUNA_APP_KEY
+
+    # NB: Adzuna returns 403 if a User-Agent is not present.
+    headers = {"User-Agent": "career-builder/1.0"}
+
+    resp = requests.get(url, headers=headers, params=query, timeout=15)
+    resp.raise_for_status()
+    return resp.json()
+
 
 def fetch_internships(params: Mapping[str, Any]) -> dict:
     return _call_api(
@@ -107,6 +139,30 @@ def fetch_yc_jobs(params: Mapping[str, Any]) -> dict:
         params,
     )
 
+def fetch_adzuna_jobs(filters: Mapping[str, Any]) -> dict:
+    p: dict[str, Any] = {}
+
+    raw_title = filters.get("advanced_title_filter") or filters.get("title_filter") or ""
+    if raw_title:
+        cleaned = re.sub(r"[()']", "", str(raw_title)).replace("|", " ").strip()
+        if cleaned:
+            p["title_only"] = cleaned
+
+    raw_loc = (filters.get("location_filter") or "").strip()
+    if raw_loc:
+        p["where"] = raw_loc.split(" OR ", 1)[0].strip()   # first keyword
+
+    try:
+        p["distance"] = int(filters.get("distance", 50))   # override or default
+    except ValueError:
+        p["distance"] = 50
+
+    limit  = int(filters.get("limit", 50))
+    offset = int(filters.get("offset", 0))
+    p["results_per_page"] = limit
+    p["page"] = offset // limit + 1
+
+    return _call_adzuna(p)
 
 # --------------------------------------------------------------------------- #
 #  Résumé → plaintext
