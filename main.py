@@ -5,9 +5,9 @@ import routes  # local import
 
 load_dotenv()
 
-app = FastAPI(title="Career Builder API")
+app = FastAPI(title="Career Builder API")
 app.include_router(routes.router)
 
 @app.get("/")
 def root():
-    return {"message": "Hello World"}
+    return {"message": "server working"}

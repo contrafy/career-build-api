@@ -49,9 +49,11 @@ COMMON_HEADERS = {"x-rapidapi-key": RAPIDAPI_KEY}
 # --------------------------------------------------------------------------- #
 
 def _sanitize_params(params: Mapping[str, Any]) -> Dict[str, str]:
+    ALLOWED_KEYS = {"advanced_title_filter", "location_filter"}
     clean: Dict[str, str] = {}
+
     for k, v in params.items():
-        if k == "resume_id":
+        if k not in ALLOWED_KEYS:
             continue
         if v is None or v == "":
             continue
@@ -60,6 +62,15 @@ def _sanitize_params(params: Mapping[str, Any]) -> Dict[str, str]:
         else:
             clean[k] = str(v)
     return clean
+
+def _extract_jobs_list(payload: object) -> list[dict]:
+    if isinstance(payload, list):
+        return payload
+    if isinstance(payload, dict):
+        for k in ("internships", "jobs", "yc_jobs", "results", "data"):
+            if k in payload and isinstance(payload[k], list):
+                return payload[k]
+    return []                                         # fallback
 
 _DELIMS = re.compile(r"(\(|\)|\||<->|!)")          # we keep these untouched
 
@@ -106,9 +117,22 @@ def _quote_advanced_terms(expr: str) -> str:
 def _call_api(url: str, host: str, params: Mapping[str, Any]) -> dict:
     headers = {**COMMON_HEADERS, "x-rapidapi-host": host}
     query = _sanitize_params(params)
+    print("\nQuery: ", query)
     resp = requests.get(url, headers=headers, params=query, timeout=15)
     resp.raise_for_status()
     return resp.json()
+
+_CAMEL_TO_SNAKE = {
+    "title": "title_filter",
+    "advancedTitle": "advanced_title_filter",
+    "description": "description_filter",
+    "location": "location_filter",
+}
+def _normalise_keys(d: dict[str, Any]) -> dict[str, Any]:
+    return {
+        _CAMEL_TO_SNAKE.get(k, k): v            # map if known, else keep
+        for k, v in d.items()
+    }
 
 def _call_adzuna(params: Mapping[str, Any]) -> dict:
     """
@@ -138,7 +162,6 @@ def _call_adzuna(params: Mapping[str, Any]) -> dict:
     resp.raise_for_status()
     return resp.json()
 
-
 def fetch_internships(params: Mapping[str, Any]) -> dict:
     payload = _call_api(
         "https://internships-api.p.rapidapi.com/active-jb-7d",
@@ -159,14 +182,16 @@ def fetch_jobs(params: Mapping[str, Any]) -> dict:
     return payload
 
 
-def fetch_yc_jobs(params: Mapping[str, Any]) -> dict:
+def fetch_yc_jobs(params: Mapping[str, Any], resume_pdf: bytes | None = None) -> dict:
+    params = _normalise_keys(dict(params))
     print(params)  # <-- for debugging
     payload = _call_api(
         "https://free-y-combinator-jobs-api.p.rapidapi.com/active-jb-7d",
         "free-y-combinator-jobs-api.p.rapidapi.com",
         params,
     )
-    # _rate_jobs_against_resume(_extract_jobs_list(payload), resume_text)
+    resume_txt = _pdf_to_text(resume_pdf) if resume_pdf else None
+    _rate_jobs_against_resume(_extract_jobs_list(payload), resume_txt)
     return payload
 
 def fetch_adzuna_jobs(filters: Mapping[str, Any]) -> dict:
@@ -304,6 +329,7 @@ def generate_filters_from_resume(pdf_bytes: bytes) -> LLMGeneratedFilters:
 # --------------------------------------------------------------------------- #
 def _rate_jobs_against_resume(jobs: list[dict], resume_text: str | None = None):
     if not jobs:                                     # nothing to do
+        print("\nno jobs?\n")
         return
 
     # keep only fields that help the LLM
@@ -327,7 +353,7 @@ def _rate_jobs_against_resume(jobs: list[dict], resume_text: str | None = None):
 
     user_parts = []
     if resume_text:
-        print("resume_text:", resume_text[:1000])
+        # print("resume_text:", resume_text[:8000])
         user_parts.append("Résumé:\n" + resume_text[:8000])
     user_parts.append("Job listings JSON:\n" + json.dumps(shortlist, ensure_ascii=False))
     user_msg = "\n\n".join(user_parts)
@@ -344,6 +370,13 @@ def _rate_jobs_against_resume(jobs: list[dict], resume_text: str | None = None):
         raw = resp.choices[0].message.content.strip()
         json_str = raw.split("```json")[-1].split("```")[0] if "```" in raw else raw
         ratings = json.loads(json_str)
+
+        # ---------- attach ratings to each listing ----------
+        for j in jobs:
+            jid = j.get("id")
+            if jid and jid in ratings:
+                j["rating"] = float(ratings[jid])
+
         print("Job-fit ratings:", ratings)           # <-- for now just log
     except Exception as e:
         print("rating LLM call failed:", e)
