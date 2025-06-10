@@ -21,6 +21,10 @@ load_dotenv()
 RAPIDAPI_KEY = os.getenv("RAPIDAPI_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+ADZUNA_APP_ID  = os.getenv("ADZUNA_APP_ID")
+ADZUNA_APP_KEY = os.getenv("ADZUNA_APP_KEY")
+if not (ADZUNA_APP_ID and ADZUNA_APP_KEY):
+    raise RuntimeError("ADZUNA_APP_ID / ADZUNA_APP_KEY missing in environment/.env")
 
 # Check for RapidAPI key and at least one LLM key
 if not RAPIDAPI_KEY:
@@ -57,35 +61,29 @@ def _sanitize_params(params: Mapping[str, Any]) -> Dict[str, str]:
             clean[k] = str(v)
     return clean
 
-# --------------------------------------------------------------------------- #
-# ❶  small util: pull the list out of any RapidAPI payload shape
-# --------------------------------------------------------------------------- #
-def _extract_jobs_list(payload: object) -> list[dict]:
-    if isinstance(payload, list):
-        return payload
-    if isinstance(payload, dict):
-        for k in ("internships", "jobs", "yc_jobs", "results", "data"):
-            if k in payload and isinstance(payload[k], list):
-                return payload[k]
-    return []                                         # fallback
+_DELIMS = re.compile(r"(\(|\)|\||<->|!)")          # we keep these untouched
 
-# _DELIMS = re.compile(r"(\(|\)|\||<->|!)")
+def _map_adzuna(item: dict) -> dict:
+    """
+    Convert ONE raw Adzuna record → JobListing interface used in JobCard.tsx
+    """
+    loc = item.get("location") or {}
+    comp = item.get("company") or {}
 
-# ─── helper to pop resume_id + convert to text ─────────────────────────────
-"""
-def _pull_resume(params: Mapping[str, Any]) -> str | None:
-    
-    Remove resume_id from the params dict (so it never reaches RapidAPI)
-    and return the cached plaintext (if we have it).
-    
-    if isinstance(params, dict):
-        resume_id = params.pop("resume_id", None)
-        print("DEBUG params incoming:", params)
-        if resume_id:
-            return RESUME_CACHE.get(resume_id)
-    return None
-"""
-# unused for now
+    return {
+        "id":           str(item.get("id")),                 # JobCard.id is str
+        "title":        item.get("title"),
+        "organization": comp.get("display_name"),
+        "locations_derived": [
+            loc.get("display_name")
+        ] if loc.get("display_name") else [],
+        "location_type": None,                               # Adzuna has no flag
+        "url":          item.get("redirect_url"),
+        "date_posted":  item.get("created"),                 # e.g. "2024-12-01T17:34:00Z"
+        "date_created": item.get("created"),
+        # "rating" left out – LLM will add later
+    }
+
 def _quote_advanced_terms(expr: str) -> str:
     """
     ('foo bar' | baz | C++)  ->  ('foo bar' | 'baz' | 'C++')
@@ -108,6 +106,34 @@ def _quote_advanced_terms(expr: str) -> str:
 def _call_api(url: str, host: str, params: Mapping[str, Any]) -> dict:
     headers = {**COMMON_HEADERS, "x-rapidapi-host": host}
     query = _sanitize_params(params)
+    resp = requests.get(url, headers=headers, params=query, timeout=15)
+    resp.raise_for_status()
+    return resp.json()
+
+def _call_adzuna(params: Mapping[str, Any]) -> dict:
+    """
+    Invoke Adzuna’s `/v1/api/jobs/{country}/search/{page}` endpoint.
+
+    Required path params:
+        country – ISO-3166 code (default “us”)
+        page    – 1-based page index
+
+    All other search options go in the query-string.
+    """
+    # ----------------------------- path parts ------------------------------
+    country = str(params.pop("country", "us")).lower()
+    page    = int(params.pop("page",    1))                # defaults to 1
+
+    url = f"https://api.adzuna.com/v1/api/jobs/{country}/search/{page}"
+
+    # ----------------------------- query params ---------------------------
+    query             = _sanitize_params(params)
+    query["app_id"]   = ADZUNA_APP_ID
+    query["app_key"]  = ADZUNA_APP_KEY
+
+    # NB: Adzuna returns 403 if a User-Agent is not present.
+    headers = {"User-Agent": "career-builder/1.0"}
+
     resp = requests.get(url, headers=headers, params=query, timeout=15)
     resp.raise_for_status()
     return resp.json()
@@ -142,6 +168,32 @@ def fetch_yc_jobs(params: Mapping[str, Any]) -> dict:
     )
     # _rate_jobs_against_resume(_extract_jobs_list(payload), resume_text)
     return payload
+
+def fetch_adzuna_jobs(filters: Mapping[str, Any]) -> dict:
+    p: dict[str, Any] = {}
+
+    raw_title = filters.get("advanced_title_filter") or filters.get("title_filter") or ""
+    if raw_title:
+        cleaned = re.sub(r"[()']", "", str(raw_title)).replace("|", " ").strip()
+        if cleaned:
+            p["title_only"] = cleaned
+
+    raw_loc = (filters.get("location_filter") or "").strip()
+    if raw_loc:
+        p["where"] = raw_loc.split(" OR ", 1)[0].strip()
+
+    try:
+        p["distance"] = int(filters.get("distance", 50))
+    except ValueError:
+        p["distance"] = 50
+
+    limit = int(filters.get("limit", 50))    
+    p["results_per_page"] = limit            
+    p["page"] = 1                            
+
+    raw = _call_adzuna(p)
+    mapped = [_map_adzuna(r) for r in raw.get("results", [])]
+    return {"results": mapped}
 
 
 # --------------------------------------------------------------------------- #

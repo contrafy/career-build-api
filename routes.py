@@ -2,7 +2,9 @@ from fastapi import APIRouter, HTTPException, Request, UploadFile, File
 from pydantic import BaseModel
 
 import helpers
-from models import LLMGeneratedFilters, JobFilters
+import re
+from typing import Any, Mapping
+from models import LLMGeneratedFilters
 
 router = APIRouter()
 
@@ -35,6 +37,14 @@ async def fetch_yc_jobs(req: SearchRequest):
     try:
         print(req)
         return helpers.fetch_yc_jobs(req.filters.as_query())
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc))
+    
+@router.get("/fetch_adzuna_jobs")
+async def fetch_adzuna_jobs_route(request: Request):
+    try:
+        print(request.query_params)
+        return helpers.fetch_adzuna_jobs(dict(request.query_params))
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
 
