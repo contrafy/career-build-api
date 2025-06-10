@@ -4,6 +4,8 @@ from pydantic import BaseModel
 import helpers
 import json
 from models import LLMGeneratedFilters, JobFilters
+import re
+from typing import Any, Mapping
 
 router = APIRouter()
 
@@ -41,6 +43,14 @@ async def fetch_yc_jobs(
         print("\nfilters_obj: ", filters_obj)
         pdf_bytes = await resume.read() if resume else None
         return helpers.fetch_yc_jobs(filters_obj, pdf_bytes)
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc))
+    
+@router.get("/fetch_adzuna_jobs")
+async def fetch_adzuna_jobs_route(request: Request):
+    try:
+        print(request.query_params)
+        return helpers.fetch_adzuna_jobs(dict(request.query_params))
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
 
