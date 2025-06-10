@@ -1,7 +1,8 @@
-from fastapi import APIRouter, HTTPException, Request, UploadFile, File
+from fastapi import APIRouter, HTTPException, Request, UploadFile, File, Form
 from pydantic import BaseModel
 
 import helpers
+import json
 from models import LLMGeneratedFilters, JobFilters
 
 router = APIRouter()
@@ -31,18 +32,24 @@ async def fetch_jobs(req: SearchRequest):
 
 
 @router.post("/fetch_yc_jobs")
-async def fetch_yc_jobs(req: SearchRequest):
+async def fetch_yc_jobs(
+    filters: str = Form(...),
+    resume: UploadFile | None = File(None)
+):
     try:
-        print(req)
-        return helpers.fetch_yc_jobs(req.filters.as_query())
+        filters_obj = json.loads(filters)
+        print("\nfilters_obj: ", filters_obj)
+        pdf_bytes = await resume.read() if resume else None
+        return helpers.fetch_yc_jobs(filters_obj, pdf_bytes)
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
+
 
 
 @router.post("/test_llm_resume_parsing", response_model=LLMGeneratedFilters)
 async def test_llm_resume_parsing(resume: UploadFile = File(...)):
     """
-    Upload a PDF résumé, receive JSON filters derived by GPT‑4.
+    Upload a PDF résumé, receive JSON filters derived by GPT-4.
     """
     if resume.content_type != "application/pdf":
         raise HTTPException(status_code=400, detail="Only PDF resumes are supported")
