@@ -49,7 +49,7 @@ COMMON_HEADERS = {"x-rapidapi-key": RAPIDAPI_KEY}
 # --------------------------------------------------------------------------- #
 
 def _sanitize_params(params: Mapping[str, Any]) -> Dict[str, str]:
-    ALLOWED_KEYS = {"advanced_title_filter", "location_filter"}
+    ALLOWED_KEYS = {"advanced_title_filter", "location_filter", "title_only", "where", "distance", "page", "results_per_page", "country"}
     clean: Dict[str, str] = {}
 
     for k, v in params.items():
