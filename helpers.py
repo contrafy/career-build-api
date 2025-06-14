@@ -79,7 +79,6 @@ def _sanitize_params(params: Mapping[str, Any]) -> Dict[str, str]:
                 quoted.append(tok)
         clean["advanced_title_filter"] = "|".join(quoted)
 
-    print("Sanitized params ready for API:", clean)
     return clean
 
 def _extract_jobs_list(payload: object) -> list[dict]:
@@ -117,8 +116,9 @@ def _map_adzuna(item: dict) -> dict:
 def _call_api(url: str, host: str, params: Mapping[str, Any]) -> dict:
     headers = {**COMMON_HEADERS, "x-rapidapi-host": host}
     query = _sanitize_params(params)
-    print("\nQuery: ", query)
+    print("\nQuery about to be sent: ", query, "\n")
     resp = requests.get(url, headers=headers, params=query, timeout=15)
+    print("\nResponse from external API: ", resp, resp.content, "\n")
     resp.raise_for_status()
     return resp.json()
 
@@ -162,29 +162,32 @@ def _call_adzuna(params: Mapping[str, Any]) -> dict:
     resp.raise_for_status()
     return resp.json()
 
-def fetch_internships(params: Mapping[str, Any]) -> dict:
+def fetch_internships(params: Mapping[str, Any], resume_pdf: bytes | None = None) -> dict:
+    params = _normalise_keys(dict(params))
     payload = _call_api(
         "https://internships-api.p.rapidapi.com/active-jb-7d",
         "internships-api.p.rapidapi.com",
         params,
     )
-    # _rate_jobs_against_resume(_extract_jobs_list(payload), resume_text)
+    # resume_txt = _pdf_to_text(resume_pdf) if resume_pdf else None
+    # _rate_jobs_against_resume(_extract_jobs_list(payload), resume_txt)
     return payload
 
 
-def fetch_jobs(params: Mapping[str, Any]) -> dict:
+def fetch_jobs(params: Mapping[str, Any], resume_pdf: bytes | None = None) -> dict:
+    params = _normalise_keys(dict(params))
     payload = _call_api(
         "https://active-jobs-db.p.rapidapi.com/active-ats-7d",
         "active-jobs-db.p.rapidapi.com",
         params,
     )
-    # _rate_jobs_against_resume(_extract_jobs_list(payload), resume_text)
+    resume_txt = _pdf_to_text(resume_pdf) if resume_pdf else None
+    _rate_jobs_against_resume(_extract_jobs_list(payload), resume_txt)
     return payload
 
 
 def fetch_yc_jobs(params: Mapping[str, Any], resume_pdf: bytes | None = None) -> dict:
     params = _normalise_keys(dict(params))
-    print(params)  # <-- for debugging
     payload = _call_api(
         "https://free-y-combinator-jobs-api.p.rapidapi.com/active-jb-7d",
         "free-y-combinator-jobs-api.p.rapidapi.com",
@@ -314,12 +317,6 @@ def generate_filters_from_resume(pdf_bytes: bytes) -> LLMGeneratedFilters:
         cleaned = json_str.replace("\r", " ").replace("\n", " ")
         raw_filters = json.loads(cleaned, strict=False)
 
-    # Wrap terms in single quotes to appease the postgres gods
-    """
-    atf = raw_filters.get("advanced_title_filter")
-    if isinstance(atf, str):
-        raw_filters["advanced_title_filter"] = _quote_advanced_terms(atf)
-    """
 
     # Validate and return only the two flat filters needed by the UI
     return LLMGeneratedFilters(**raw_filters).dict(exclude_none=True)
