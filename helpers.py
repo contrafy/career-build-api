@@ -52,6 +52,7 @@ def _sanitize_params(params: Mapping[str, Any]) -> Dict[str, str]:
     ALLOWED_KEYS = {"advanced_title_filter", "location_filter"}
     clean: Dict[str, str] = {}
 
+    # ── 1. basic filtering / stringification ───────────────────────────────
     for k, v in params.items():
         if k not in ALLOWED_KEYS:
             continue
@@ -61,6 +62,24 @@ def _sanitize_params(params: Mapping[str, Any]) -> Dict[str, str]:
             clean[k] = "true" if v else "false"
         else:
             clean[k] = str(v)
+
+    # ── 2. quote multi-word terms in advanced_title_filter ─────────────────
+    raw = clean.get("advanced_title_filter")
+    if raw:
+        # split on the '|' operator, trim whitespace around each token
+        tokens = [t.strip() for t in raw.split("|")]
+        quoted: list[str] = []
+        for tok in tokens:
+            if not tok:
+                continue
+            # already quoted? leave it; otherwise quote if it contains spaces
+            if " " in tok and not (tok.startswith("'") or tok.startswith('"')):
+                quoted.append(f"'{tok}'")
+            else:
+                quoted.append(tok)
+        clean["advanced_title_filter"] = "|".join(quoted)
+
+    print("Sanitized params ready for API:", clean)
     return clean
 
 def _extract_jobs_list(payload: object) -> list[dict]:
@@ -95,25 +114,6 @@ def _map_adzuna(item: dict) -> dict:
         # "rating" left out – LLM will add later
     }
 
-def _quote_advanced_terms(expr: str) -> str:
-    """
-    ('foo bar' | baz | C++)  ->  ('foo bar' | 'baz' | 'C++')
-    Parentheses and operators remain in their original positions.
-    """
-    out: list[str] = []
-    for chunk in _DELIMS.split(expr):              # yields delimiters *and* gaps
-        if chunk in {"(", ")", "|", "<->", "!"}:
-            out.append(chunk)                      # keep delimiters as‑is
-        else:
-            stripped = chunk.strip()
-            if not stripped:                       # pure whitespace ⇒ preserve
-                out.append(chunk)
-            elif stripped[0] in {"'", '"'}:        # already quoted
-                out.append(stripped)
-            else:                                  # wrap bare term
-                out.append(f"'{stripped}'")
-    return "".join(out)                            # join w/out inserting extras
-
 def _call_api(url: str, host: str, params: Mapping[str, Any]) -> dict:
     headers = {**COMMON_HEADERS, "x-rapidapi-host": host}
     query = _sanitize_params(params)
@@ -136,11 +136,11 @@ def _normalise_keys(d: dict[str, Any]) -> dict[str, Any]:
 
 def _call_adzuna(params: Mapping[str, Any]) -> dict:
     """
-    Invoke Adzuna’s `/v1/api/jobs/{country}/search/{page}` endpoint.
+    Invoke Adzuna's `/v1/api/jobs/{country}/search/{page}` endpoint.
 
     Required path params:
-        country – ISO-3166 code (default “us”)
-        page    – 1-based page index
+        country - ISO-3166 code (default “us”)
+        page    - 1-based page index
 
     All other search options go in the query-string.
     """
