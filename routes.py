@@ -2,6 +2,8 @@ from fastapi import APIRouter, HTTPException, Request, UploadFile, File, Form
 from pydantic import BaseModel
 
 import helpers
+import ai
+
 import json
 from models import LLMGeneratedFilters, JobFilters
 import re
@@ -74,7 +76,7 @@ async def test_llm_resume_parsing(resume: UploadFile = File(...)):
 
     try:
         pdf_bytes = await resume.read()
-        filters = helpers.generate_filters_from_resume(pdf_bytes)
+        filters = ai.generate_filters_from_resume(pdf_bytes)
         if not filters:
             raise HTTPException(status_code=400, detail="No filters generated from the résumé")
         

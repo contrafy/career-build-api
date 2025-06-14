@@ -3,46 +3,12 @@ import os
 from io import BytesIO
 from typing import Any, Dict, Mapping
 import re
-import uuid
-
-import openai
-from groq import Groq
+import ai
 
 import requests
 import PyPDF2
-from dotenv import load_dotenv
 
 from models import LLMGeneratedFilters
-
-# --------------------------------------------------------------------------- #
-#  ENV / CONSTANTS
-# --------------------------------------------------------------------------- #
-load_dotenv()
-RAPIDAPI_KEY = os.getenv("RAPIDAPI_KEY")
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-ADZUNA_APP_ID  = os.getenv("ADZUNA_APP_ID")
-ADZUNA_APP_KEY = os.getenv("ADZUNA_APP_KEY")
-if not (ADZUNA_APP_ID and ADZUNA_APP_KEY):
-    raise RuntimeError("ADZUNA_APP_ID / ADZUNA_APP_KEY missing in environment/.env")
-
-# Check for RapidAPI key and at least one LLM key
-if not RAPIDAPI_KEY:
-    raise RuntimeError("RAPIDAPI_KEY missing in environment/.env")
-if not (OPENAI_API_KEY or GROQ_API_KEY):
-    raise RuntimeError("OPENAI_API_KEY (or GROQ_API_KEY) missing in environment/.env")
-
-# Initialize OpenAI and Groq clients
-openai.api_key = OPENAI_API_KEY
-client = Groq(
-    api_key=os.environ.get("GROQ_API_KEY"),  # This is the default and can be omitted
-)
-
-COMMON_HEADERS = {"x-rapidapi-key": RAPIDAPI_KEY}
-
-# ─── global in‑mem store (top of file, after COMMON_HEADERS) ───────────────
-# RESUME_CACHE: dict[str, str] = {}     # resume_id → plaintext résumé
-
 
 # --------------------------------------------------------------------------- #
 #  RapidAPI helpers
@@ -94,8 +60,6 @@ def _extract_jobs_list(payload: object) -> list[dict]:
                 return payload[k]
     return []                                         # fallback
 
-_DELIMS = re.compile(r"(\(|\)|\||<->|!)")          # we keep these untouched
-
 def _map_adzuna(item: dict) -> dict:
     """
     Convert ONE raw Adzuna record → JobListing interface used in JobCard.tsx
@@ -118,7 +82,7 @@ def _map_adzuna(item: dict) -> dict:
     }
 
 def _call_api(url: str, host: str, params: Mapping[str, Any]) -> dict:
-    headers = {**COMMON_HEADERS, "x-rapidapi-host": host}
+    headers = {**ai.COMMON_HEADERS, "x-rapidapi-host": host}
     
     query = _sanitize_params(params)
     print("\nQuery about to be sent: ", query, "\n")
@@ -237,91 +201,6 @@ def _pdf_to_text(pdf_bytes: bytes) -> str:
     reader = PyPDF2.PdfReader(BytesIO(pdf_bytes))
     pages = [p.extract_text() or "" for p in reader.pages]
     return "\n".join(pages)
-
-
-# --------------------------------------------------------------------------- #
-#  LLM prompts
-# --------------------------------------------------------------------------- #
-_FILTER_DOC = """
-You are an **API filter generator**.  
-Analyse the résumé and output **only** a JSON object using the keys below.
-
-Valid JSON keys  
-    advanced_title_filter    ← a single comma-separated string of relevant titles/skills  
-    location_filter          ← a single comma-separated string of relevant locations
-
-──────────────────────────────────────────────────────────────────────────────
-advanced_title_filter  (STRING - comma-separated)
-──────────────────────────────────────────────────────────────────────────────
-• Extract relevant titles, skills, and technologies from the résumé.
-• Return them as **one comma-separated list**, e.g.  
-  `Systems Administrator, Linux Administrator, DevOps Engineer, C++, Python`
-
-• DO NOT wrap terms in quotes.
-• Maximize breadth while staying relevant to the candidate's skills.
-• Include both specific and general forms (e.g., "Kubernetes", "Cloud Engineer").
-
-──────────────────────────────────────────────────────────────────────────────
-location_filter  (STRING - comma-separated)
-──────────────────────────────────────────────────────────────────────────────
-• Use full names only (“United States”, “New York”, “United Kingdom”).  
-• Combine multiple locations with **commas**, e.g.  
-  `United States, Canada, Netherlands`
-• Prefer state or city granularity unless broader openness is stated.
-
-──────────────────────────────────────────────────────────────────────────────
-OUTPUT  (STRICT)
-──────────────────────────────────────────────────────────────────────────────
-{"advanced_title_filter": "...", "location_filter": "..."}
-"""
-
-def _build_resume_prompt(resume_text: str) -> str:
-    return (
-    _FILTER_DOC
-    + "\n---\nRESUME:\n"
-    + resume_text[:7000] # protect token budget
-    + "\n---\nGenerate JSON now:"
-    )
-
-# ---------------------------------------------------------------------------
-# Public: generate filters with OpenAI
-# ---------------------------------------------------------------------------
-
-def generate_filters_from_resume(pdf_bytes: bytes) -> LLMGeneratedFilters:
-    # Convert PDF resume to text for LLM ingestion
-    resume_text = _pdf_to_text(pdf_bytes)
-
-
-    # Use Groq to generate filters
-    response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=[
-            {"role": "system", "content": "You are a helpful job hunting assistant, the goal is to maximize the breadth of jobs that the user can and should apply to, "
-                                          "while also giving them the jobs they are most likely to desire and do well at from the information available to you."},
-            {"role": "user", "content": _build_resume_prompt(resume_text)},
-        ],
-        temperature=0.2,
-        response_format={"type": "json_object"}
-    )
-    content = response.choices[0].message.content.strip()
-    print("LLM response:", content)  # <-- for debugging
-    if not content:
-        raise ValueError("Empty response from LLM")
-
-    # Ensure pure JSON
-    json_str = content.split("```json")[-1].split("```")[0] if "```" in content else content
-
-    # Groq occasionally emits un‑escaped \n / \r inside string literals.
-    # json.loads(strict=False) tolerates those; if it still fails, strip them.
-    try:
-        raw_filters = json.loads(json_str, strict=False)
-    except json.JSONDecodeError:
-        cleaned = json_str.replace("\r", " ").replace("\n", " ")
-        raw_filters = json.loads(cleaned, strict=False)
-
-
-    # Validate and return only the two flat filters needed by the UI
-    return LLMGeneratedFilters(**raw_filters).dict(exclude_none=True)
 
 # --------------------------------------------------------------------------- #
 # ❷  call an LLM to score every job 0.0‑10.0 and print the result
