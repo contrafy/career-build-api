@@ -58,7 +58,7 @@ location_filter  (STRING - comma-separated)
 • Use full names only (“United States”, “New York”, “United Kingdom”).  
 • Combine multiple locations with **commas**, e.g.  
   `United States, Canada, Netherlands`
-• Prefer state or city granularity unless broader openness is stated.
+• Only go down to COUNTRY level granularity based on where the resume says they wish to be or are currently located explicitly
 
 ──────────────────────────────────────────────────────────────────────────────
 OUTPUT  (STRICT)
