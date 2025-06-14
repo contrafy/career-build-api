@@ -56,11 +56,16 @@ async def fetch_yc_jobs(
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
     
-@router.get("/fetch_adzuna_jobs")
-async def fetch_adzuna_jobs_route(request: Request):
+@router.post("/fetch_adzuna_jobs")
+async def fetch_adzuna_jobs_route(
+    filters: str = Form(...),
+    resume: UploadFile | None = File(None)
+):
     try:
-        print(request.query_params)
-        return helpers.fetch_adzuna_jobs(dict(request.query_params))
+        filters_obj = json.loads(filters)
+        print("\nFrontend Sent: ", filters_obj)
+        pdf_bytes = await resume.read() if resume else None
+        return helpers.fetch_adzuna_jobs(filters_obj, pdf_bytes)
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
 

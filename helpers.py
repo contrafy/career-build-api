@@ -80,8 +80,10 @@ def _call_api(url: str, host: str, params: Mapping[str, Any]) -> dict:
     
     query = _sanitize_params(params)
     print("\nQuery about to be sent: ", query, "\n")
+
     resp = requests.get(url, headers=headers, params=query, timeout=15)
     print("\nResponse from external API: ", resp, "\n")
+
     resp.raise_for_status()
     return resp.json()
 
@@ -120,8 +122,11 @@ def _call_adzuna(params: Mapping[str, Any]) -> dict:
 
     # NB: Adzuna returns 403 if a User-Agent is not present.
     headers = {"User-Agent": "career-builder/1.0"}
+    print("\nQuery about to be sent: ", query, "\n")
 
     resp = requests.get(url, headers=headers, params=query, timeout=15)
+    print("\nResponse from external API: ", resp, "\n")
+
     resp.raise_for_status()
     return resp.json()
 
@@ -160,25 +165,25 @@ def fetch_yc_jobs(params: Mapping[str, Any], resume_pdf: bytes | None = None) ->
     ai._rate_jobs_against_resume(_extract_jobs_list(payload), resume_txt)
     return payload
 
-def fetch_adzuna_jobs(filters: Mapping[str, Any]) -> dict:
+def fetch_adzuna_jobs(params: Mapping[str, Any], resume_pdf: bytes | None = None) -> dict:
     p: dict[str, Any] = {}
 
-    raw_title = filters.get("advanced_title_filter") or filters.get("title_filter") or ""
+    raw_title = params.get("advanced_title_filter") or params.get("title_filter") or ""
     if raw_title:
         cleaned = re.sub(r"[()']", "", str(raw_title)).replace("|", " ").strip()
         if cleaned:
             p["title_only"] = cleaned
 
-    raw_loc = (filters.get("location_filter") or "").strip()
+    raw_loc = (params.get("location_filter") or "").strip()
     if raw_loc:
         p["where"] = raw_loc.split(" OR ", 1)[0].strip()
 
     try:
-        p["distance"] = int(filters.get("distance", 50))
+        p["distance"] = int(params.get("distance", 50))
     except ValueError:
         p["distance"] = 50
 
-    limit = int(filters.get("limit", 50))    
+    limit = int(params.get("limit", 50))    
     p["results_per_page"] = limit            
     p["page"] = 1                            
 
