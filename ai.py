@@ -109,3 +109,57 @@ def generate_filters_from_resume(pdf_bytes: bytes) -> LLMGeneratedFilters:
 
     # Validate and return only the two flat filters needed by the UI
     return LLMGeneratedFilters(**raw_filters).dict(exclude_none=True)
+
+def _rate_jobs_against_resume(jobs: list[dict], resume_text: str | None = None):
+    if not jobs:                                     # nothing to do
+        print("\nno jobs?\n")
+        return
+
+    # keep only fields that help the LLM
+    shortlist = [
+        {
+            "id": j.get("id"),
+            "date_posted": j.get("date_posted"),
+            "title": j.get("title"),
+            "organization": j.get("organization"),
+            "description_text": j.get("description_text"),
+        }
+        for j in jobs
+    ]
+
+    system_msg = (
+        "You are a career-match assistant.\n"
+        "Rate each job 0.0-10.0 (exactly one decimal place, use whole values sparingly) for how well it fits the "
+        "candidate's résumé.  Return ONLY a JSON object whose keys are the "
+        "job IDs and whose values are the ratings.  No other text."
+    )
+
+    user_parts = []
+    if resume_text:
+        # print("resume_text:", resume_text[:8000])
+        user_parts.append("Résumé:\n" + resume_text[:8000])
+    user_parts.append("Job listings JSON:\n" + json.dumps(shortlist, ensure_ascii=False))
+    user_msg = "\n\n".join(user_parts)
+
+    try:
+        resp = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[
+                {"role": "system", "content": system_msg},
+                {"role": "user",    "content": user_msg},
+            ],
+            temperature=0.5,
+        )
+        raw = resp.choices[0].message.content.strip()
+        json_str = raw.split("```json")[-1].split("```")[0] if "```" in raw else raw
+        ratings = json.loads(json_str)
+
+        # ---------- attach ratings to each listing ----------
+        for j in jobs:
+            jid = j.get("id")
+            if jid and jid in ratings:
+                j["rating"] = float(ratings[jid])
+
+        print("Job-fit ratings:", ratings)           # <-- for now just log
+    except Exception as e:
+        print("rating LLM call failed:", e)

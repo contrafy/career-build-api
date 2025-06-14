@@ -1,14 +1,8 @@
-import json
-import os
 from io import BytesIO
 from typing import Any, Dict, Mapping
-import re
+import re, requests, PyPDF2
+
 import ai
-
-import requests
-import PyPDF2
-
-from models import LLMGeneratedFilters
 
 # --------------------------------------------------------------------------- #
 #  RapidAPI helpers
@@ -121,8 +115,8 @@ def _call_adzuna(params: Mapping[str, Any]) -> dict:
 
     # ----------------------------- query params ---------------------------
     query             = _sanitize_params(params)
-    query["app_id"]   = ADZUNA_APP_ID
-    query["app_key"]  = ADZUNA_APP_KEY
+    query["app_id"]   = ai.ADZUNA_APP_ID
+    query["app_key"]  = ai.ADZUNA_APP_KEY
 
     # NB: Adzuna returns 403 if a User-Agent is not present.
     headers = {"User-Agent": "career-builder/1.0"}
@@ -139,7 +133,7 @@ def fetch_internships(params: Mapping[str, Any], resume_pdf: bytes | None = None
         params,
     )
     resume_txt = _pdf_to_text(resume_pdf) if resume_pdf else None
-    _rate_jobs_against_resume(_extract_jobs_list(payload), resume_txt)
+    ai._rate_jobs_against_resume(_extract_jobs_list(payload), resume_txt)
     return payload
 
 
@@ -151,7 +145,7 @@ def fetch_jobs(params: Mapping[str, Any], resume_pdf: bytes | None = None) -> di
         params,
     )
     resume_txt = _pdf_to_text(resume_pdf) if resume_pdf else None
-    _rate_jobs_against_resume(_extract_jobs_list(payload), resume_txt)
+    ai._rate_jobs_against_resume(_extract_jobs_list(payload), resume_txt)
     return payload
 
 
@@ -163,7 +157,7 @@ def fetch_yc_jobs(params: Mapping[str, Any], resume_pdf: bytes | None = None) ->
         params,
     )
     resume_txt = _pdf_to_text(resume_pdf) if resume_pdf else None
-    _rate_jobs_against_resume(_extract_jobs_list(payload), resume_txt)
+    ai._rate_jobs_against_resume(_extract_jobs_list(payload), resume_txt)
     return payload
 
 def fetch_adzuna_jobs(filters: Mapping[str, Any]) -> dict:
@@ -201,60 +195,3 @@ def _pdf_to_text(pdf_bytes: bytes) -> str:
     reader = PyPDF2.PdfReader(BytesIO(pdf_bytes))
     pages = [p.extract_text() or "" for p in reader.pages]
     return "\n".join(pages)
-
-# --------------------------------------------------------------------------- #
-# ❷  call an LLM to score every job 0.0‑10.0 and print the result
-# --------------------------------------------------------------------------- #
-def _rate_jobs_against_resume(jobs: list[dict], resume_text: str | None = None):
-    if not jobs:                                     # nothing to do
-        print("\nno jobs?\n")
-        return
-
-    # keep only fields that help the LLM
-    shortlist = [
-        {
-            "id": j.get("id"),
-            "date_posted": j.get("date_posted"),
-            "title": j.get("title"),
-            "organization": j.get("organization"),
-            "description_text": j.get("description_text"),
-        }
-        for j in jobs
-    ]
-
-    system_msg = (
-        "You are a career-match assistant.\n"
-        "Rate each job 0.0-10.0 (exactly one decimal place) for how well it fits the "
-        "candidate's résumé.  Return ONLY a JSON object whose keys are the "
-        "job IDs and whose values are the ratings.  No other text."
-    )
-
-    user_parts = []
-    if resume_text:
-        # print("resume_text:", resume_text[:8000])
-        user_parts.append("Résumé:\n" + resume_text[:8000])
-    user_parts.append("Job listings JSON:\n" + json.dumps(shortlist, ensure_ascii=False))
-    user_msg = "\n\n".join(user_parts)
-
-    try:
-        resp = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
-            messages=[
-                {"role": "system", "content": system_msg},
-                {"role": "user",    "content": user_msg},
-            ],
-            temperature=0.5,
-        )
-        raw = resp.choices[0].message.content.strip()
-        json_str = raw.split("```json")[-1].split("```")[0] if "```" in raw else raw
-        ratings = json.loads(json_str)
-
-        # ---------- attach ratings to each listing ----------
-        for j in jobs:
-            jid = j.get("id")
-            if jid and jid in ratings:
-                j["rating"] = float(ratings[jid])
-
-        print("Job-fit ratings:", ratings)           # <-- for now just log
-    except Exception as e:
-        print("rating LLM call failed:", e)
