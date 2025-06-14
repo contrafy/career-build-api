@@ -49,8 +49,13 @@ COMMON_HEADERS = {"x-rapidapi-key": RAPIDAPI_KEY}
 # --------------------------------------------------------------------------- #
 
 def _sanitize_params(params: Mapping[str, Any]) -> Dict[str, str]:
-    ALLOWED_KEYS = {"advanced_title_filter", "location_filter", "title_only", "where", "distance", "page", "results_per_page", "country"}
+    ALLOWED_KEYS = {"advanced_title_filter", "location_filter", "limit", "title_only", "where", "distance", "page", "results_per_page", "country"}
+
     clean: Dict[str, str] = {}
+
+    # ── 1. basic filtering / stringification ───────────────────────────────
+    if not params.get("limit"):
+        clean["limit"] = "15" 
 
     for k, v in params.items():
         if k not in ALLOWED_KEYS:
@@ -61,6 +66,23 @@ def _sanitize_params(params: Mapping[str, Any]) -> Dict[str, str]:
             clean[k] = "true" if v else "false"
         else:
             clean[k] = str(v)
+
+    # ── 2. quote multi-word terms in advanced_title_filter ─────────────────
+    raw = clean.get("advanced_title_filter")
+    if raw:
+        # split on the '|' operator, trim whitespace around each token
+        tokens = [t.strip() for t in raw.split("|")]
+        quoted: list[str] = []
+        for tok in tokens:
+            if not tok:
+                continue
+            # already quoted? leave it; otherwise quote if it contains spaces
+            if " " in tok and not (tok.startswith("'") or tok.startswith('"')):
+                quoted.append(f"'{tok}'")
+            else:
+                quoted.append(tok)
+        clean["advanced_title_filter"] = "|".join(quoted)
+
     return clean
 
 def _extract_jobs_list(payload: object) -> list[dict]:
@@ -95,30 +117,13 @@ def _map_adzuna(item: dict) -> dict:
         # "rating" left out – LLM will add later
     }
 
-def _quote_advanced_terms(expr: str) -> str:
-    """
-    ('foo bar' | baz | C++)  ->  ('foo bar' | 'baz' | 'C++')
-    Parentheses and operators remain in their original positions.
-    """
-    out: list[str] = []
-    for chunk in _DELIMS.split(expr):              # yields delimiters *and* gaps
-        if chunk in {"(", ")", "|", "<->", "!"}:
-            out.append(chunk)                      # keep delimiters as‑is
-        else:
-            stripped = chunk.strip()
-            if not stripped:                       # pure whitespace ⇒ preserve
-                out.append(chunk)
-            elif stripped[0] in {"'", '"'}:        # already quoted
-                out.append(stripped)
-            else:                                  # wrap bare term
-                out.append(f"'{stripped}'")
-    return "".join(out)                            # join w/out inserting extras
-
 def _call_api(url: str, host: str, params: Mapping[str, Any]) -> dict:
     headers = {**COMMON_HEADERS, "x-rapidapi-host": host}
+    
     query = _sanitize_params(params)
-    print("\nQuery: ", query)
+    print("\nQuery about to be sent: ", query, "\n")
     resp = requests.get(url, headers=headers, params=query, timeout=15)
+    print("\nResponse from external API: ", resp, "\n")
     resp.raise_for_status()
     return resp.json()
 
@@ -136,11 +141,11 @@ def _normalise_keys(d: dict[str, Any]) -> dict[str, Any]:
 
 def _call_adzuna(params: Mapping[str, Any]) -> dict:
     """
-    Invoke Adzuna’s `/v1/api/jobs/{country}/search/{page}` endpoint.
+    Invoke Adzuna's `/v1/api/jobs/{country}/search/{page}` endpoint.
 
     Required path params:
-        country – ISO-3166 code (default “us”)
-        page    – 1-based page index
+        country - ISO-3166 code (default “us”)
+        page    - 1-based page index
 
     All other search options go in the query-string.
     """
@@ -162,29 +167,32 @@ def _call_adzuna(params: Mapping[str, Any]) -> dict:
     resp.raise_for_status()
     return resp.json()
 
-def fetch_internships(params: Mapping[str, Any]) -> dict:
+def fetch_internships(params: Mapping[str, Any], resume_pdf: bytes | None = None) -> dict:
+    params = _normalise_keys(dict(params))
     payload = _call_api(
         "https://internships-api.p.rapidapi.com/active-jb-7d",
         "internships-api.p.rapidapi.com",
         params,
     )
-    # _rate_jobs_against_resume(_extract_jobs_list(payload), resume_text)
+    resume_txt = _pdf_to_text(resume_pdf) if resume_pdf else None
+    _rate_jobs_against_resume(_extract_jobs_list(payload), resume_txt)
     return payload
 
 
-def fetch_jobs(params: Mapping[str, Any]) -> dict:
+def fetch_jobs(params: Mapping[str, Any], resume_pdf: bytes | None = None) -> dict:
+    params = _normalise_keys(dict(params))
     payload = _call_api(
         "https://active-jobs-db.p.rapidapi.com/active-ats-7d",
         "active-jobs-db.p.rapidapi.com",
         params,
     )
-    # _rate_jobs_against_resume(_extract_jobs_list(payload), resume_text)
+    resume_txt = _pdf_to_text(resume_pdf) if resume_pdf else None
+    _rate_jobs_against_resume(_extract_jobs_list(payload), resume_txt)
     return payload
 
 
 def fetch_yc_jobs(params: Mapping[str, Any], resume_pdf: bytes | None = None) -> dict:
     params = _normalise_keys(dict(params))
-    print(params)  # <-- for debugging
     payload = _call_api(
         "https://free-y-combinator-jobs-api.p.rapidapi.com/active-jb-7d",
         "free-y-combinator-jobs-api.p.rapidapi.com",
@@ -283,9 +291,6 @@ def generate_filters_from_resume(pdf_bytes: bytes) -> LLMGeneratedFilters:
     # Convert PDF resume to text for LLM ingestion
     resume_text = _pdf_to_text(pdf_bytes)
 
-    # cache and emit a UUID so future search requests can reference it
-    # resume_id = str(uuid.uuid4())
-    # RESUME_CACHE[resume_id] = resume_text
 
     # Use Groq to generate filters
     response = client.chat.completions.create(
@@ -314,12 +319,6 @@ def generate_filters_from_resume(pdf_bytes: bytes) -> LLMGeneratedFilters:
         cleaned = json_str.replace("\r", " ").replace("\n", " ")
         raw_filters = json.loads(cleaned, strict=False)
 
-    # Wrap terms in single quotes to appease the postgres gods
-    """
-    atf = raw_filters.get("advanced_title_filter")
-    if isinstance(atf, str):
-        raw_filters["advanced_title_filter"] = _quote_advanced_terms(atf)
-    """
 
     # Validate and return only the two flat filters needed by the UI
     return LLMGeneratedFilters(**raw_filters).dict(exclude_none=True)

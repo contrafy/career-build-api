@@ -14,21 +14,29 @@ class SearchRequest(BaseModel):
     resumeText: str | None = None   # plain résumé text (can be null)
 
 @router.post("/fetch_internships")
-async def fetch_internships(req: SearchRequest):
+async def fetch_internships(
+    filters: str = Form(...),
+    resume: UploadFile | None = File(None)
+):
     try:
-        print(req)
-        data = helpers.fetch_internships(req.filters.as_query())
-        return data
+        filters_obj = json.loads(filters)
+        print("\nFrontend Sent: ", filters_obj)
+        pdf_bytes = await resume.read() if resume else None
+        return helpers.fetch_internships(filters_obj, pdf_bytes)
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
 
 
 @router.post("/fetch_jobs")
-async def fetch_jobs(req: SearchRequest):
+async def fetch_jobs(
+    filters: str = Form(...),
+    resume: UploadFile | None = File(None)
+):
     try:
-        print(req)
-        data = helpers.fetch_jobs(req.filters.as_query())
-        return data
+        filters_obj = json.loads(filters)
+        print("\nFrontend Sent: ", filters_obj)
+        pdf_bytes = await resume.read() if resume else None
+        return helpers.fetch_jobs(filters_obj, pdf_bytes)
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
 
@@ -40,7 +48,7 @@ async def fetch_yc_jobs(
 ):
     try:
         filters_obj = json.loads(filters)
-        print("\nfilters_obj: ", filters_obj)
+        print("\nFrontend Sent: ", filters_obj)
         pdf_bytes = await resume.read() if resume else None
         return helpers.fetch_yc_jobs(filters_obj, pdf_bytes)
     except Exception as exc:
