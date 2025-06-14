@@ -49,10 +49,13 @@ COMMON_HEADERS = {"x-rapidapi-key": RAPIDAPI_KEY}
 # --------------------------------------------------------------------------- #
 
 def _sanitize_params(params: Mapping[str, Any]) -> Dict[str, str]:
-    ALLOWED_KEYS = {"advanced_title_filter", "location_filter"}
+    ALLOWED_KEYS = {"advanced_title_filter", "location_filter", "limit"}
     clean: Dict[str, str] = {}
 
     # ── 1. basic filtering / stringification ───────────────────────────────
+    if not params.get("limit"):
+        clean["limit"] = "15" 
+
     for k, v in params.items():
         if k not in ALLOWED_KEYS:
             continue
@@ -115,10 +118,11 @@ def _map_adzuna(item: dict) -> dict:
 
 def _call_api(url: str, host: str, params: Mapping[str, Any]) -> dict:
     headers = {**COMMON_HEADERS, "x-rapidapi-host": host}
+    
     query = _sanitize_params(params)
     print("\nQuery about to be sent: ", query, "\n")
     resp = requests.get(url, headers=headers, params=query, timeout=15)
-    print("\nResponse from external API: ", resp, resp.content, "\n")
+    print("\nResponse from external API: ", resp, "\n")
     resp.raise_for_status()
     return resp.json()
 
@@ -169,8 +173,8 @@ def fetch_internships(params: Mapping[str, Any], resume_pdf: bytes | None = None
         "internships-api.p.rapidapi.com",
         params,
     )
-    # resume_txt = _pdf_to_text(resume_pdf) if resume_pdf else None
-    # _rate_jobs_against_resume(_extract_jobs_list(payload), resume_txt)
+    resume_txt = _pdf_to_text(resume_pdf) if resume_pdf else None
+    _rate_jobs_against_resume(_extract_jobs_list(payload), resume_txt)
     return payload
 
 
@@ -286,9 +290,6 @@ def generate_filters_from_resume(pdf_bytes: bytes) -> LLMGeneratedFilters:
     # Convert PDF resume to text for LLM ingestion
     resume_text = _pdf_to_text(pdf_bytes)
 
-    # cache and emit a UUID so future search requests can reference it
-    # resume_id = str(uuid.uuid4())
-    # RESUME_CACHE[resume_id] = resume_text
 
     # Use Groq to generate filters
     response = client.chat.completions.create(
