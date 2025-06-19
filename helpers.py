@@ -9,23 +9,21 @@ import ai
 # --------------------------------------------------------------------------- #
 
 def _sanitize_params(params: Mapping[str, Any]) -> Dict[str, str]:
-    ALLOWED_KEYS = {"advanced_title_filter", "location_filter", "limit", "title_only", "where", "distance", "page", "results_per_page", "country"}
+    ALLOWED_KEYS = {"advanced_title_filter", "title_only", "location_filter", "limit", "title_only", "where", "what", "distance", "page", "results_per_page", "country"}
 
     clean: Dict[str, str] = {}
 
     # ── 1. basic filtering / stringification ───────────────────────────────
-    if not params.get("limit"):
-        clean["limit"] = "15" 
+    print("\n\n", params.get("roleType", "uhoh"), "\n\n")
+    # if not params.get("limit") and params.get("roleType", "").upper() != "ADZUNA":
+        # clean["limit"] = "15" 
 
     for k, v in params.items():
         if k not in ALLOWED_KEYS:
             continue
         if v is None or v == "":
             continue
-        if isinstance(v, bool):
-            clean[k] = "true" if v else "false"
-        else:
-            clean[k] = str(v)
+        clean[k] = "true" if isinstance(v, bool) else str(v)
 
     # ── 2. quote multi-word terms in advanced_title_filter ─────────────────
     raw = clean.get("advanced_title_filter")
@@ -72,13 +70,14 @@ def _map_adzuna(item: dict) -> dict:
         "url":          item.get("redirect_url"),
         "date_posted":  item.get("created"),                 # e.g. "2024-12-01T17:34:00Z"
         "date_created": item.get("created"),
-        # "rating" left out – LLM will add later
     }
 
 def _call_api(url: str, host: str, params: Mapping[str, Any]) -> dict:
     headers = {**ai.COMMON_HEADERS, "x-rapidapi-host": host}
     
     query = _sanitize_params(params)
+    query["limit"] = 15
+
     print("\nQuery about to be sent: ", query, "\n")
 
     resp = requests.get(url, headers=headers, params=query, timeout=15)
@@ -125,7 +124,7 @@ def _call_adzuna(params: Mapping[str, Any]) -> dict:
     print("\nQuery about to be sent: ", query, "\n")
 
     resp = requests.get(url, headers=headers, params=query, timeout=15)
-    print("\nResponse from external API: ", resp, "\n")
+    print("\nResponse from external API: ", resp.json(), "\n")
 
     resp.raise_for_status()
     return resp.json()
@@ -166,29 +165,37 @@ def fetch_yc_jobs(params: Mapping[str, Any], resume_pdf: bytes | None = None) ->
     return payload
 
 def fetch_adzuna_jobs(params: Mapping[str, Any], resume_pdf: bytes | None = None) -> dict:
+    params = _normalise_keys(dict(params))
     p: dict[str, Any] = {}
 
+    # ───────────────────────────── helpers ────────────────────────────────
+    # convert → int or fall back to a sane default; treats None / '' the same
+    _i = lambda v, d: int(v) if isinstance(v, (int, str)) else d
+
+    # extract title params
     raw_title = params.get("advanced_title_filter") or params.get("title_filter") or ""
     if raw_title:
         cleaned = re.sub(r"[()']", "", str(raw_title)).replace("|", " ").strip()
         if cleaned:
             p["title_only"] = cleaned
 
+    # extract location params
     raw_loc = (params.get("location_filter") or "").strip()
     if raw_loc:
         p["where"] = raw_loc.split(" OR ", 1)[0].strip()
 
-    try:
-        p["distance"] = int(params.get("distance", 50))
-    except ValueError:
-        p["distance"] = 50
-
-    limit = int(params.get("limit", 50))    
-    p["results_per_page"] = limit            
-    p["page"] = 1                            
+    # set defaults
+    p["distance"]         = _i(params.get("distance"), 50)
+    p["results_per_page"] = _i(params.get("limit"), 50) 
+    p["page"]             = _i(params.get("page"), 1)
+    p["country"]          = (params.get("country") or "us").lower()                         
 
     raw = _call_adzuna(p)
     mapped = [_map_adzuna(r) for r in raw.get("results", [])]
+
+    resume_txt = _pdf_to_text(resume_pdf) if resume_pdf else None
+    ai._rate_jobs_against_resume(mapped, resume_txt)
+
     return {"results": mapped}
 
 

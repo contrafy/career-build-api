@@ -67,6 +67,7 @@ async def fetch_adzuna_jobs_route(
         pdf_bytes = await resume.read() if resume else None
         return helpers.fetch_adzuna_jobs(filters_obj, pdf_bytes)
     except Exception as exc:
+        print(exc)
         raise HTTPException(status_code=500, detail=str(exc))
 
 
