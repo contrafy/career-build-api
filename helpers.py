@@ -13,11 +13,7 @@ def _sanitize_params(params: Mapping[str, Any]) -> Dict[str, str]:
 
     clean: Dict[str, str] = {}
 
-    # ── 1. basic filtering / stringification ───────────────────────────────
-    print("\n\n", params.get("roleType", "uhoh"), "\n\n")
-    # if not params.get("limit") and params.get("roleType", "").upper() != "ADZUNA":
-        # clean["limit"] = "15" 
-
+    # filter out any non ALLOWED_KEYS
     for k, v in params.items():
         if k not in ALLOWED_KEYS:
             continue
@@ -25,7 +21,7 @@ def _sanitize_params(params: Mapping[str, Any]) -> Dict[str, str]:
             continue
         clean[k] = "true" if isinstance(v, bool) else str(v)
 
-    # ── 2. quote multi-word terms in advanced_title_filter ─────────────────
+    # quote multi-word terms in advanced_title_filter ─────────────────
     raw = clean.get("advanced_title_filter")
     if raw:
         # split on the '|' operator, trim whitespace around each token
@@ -86,18 +82,6 @@ def _call_api(url: str, host: str, params: Mapping[str, Any]) -> dict:
     resp.raise_for_status()
     return resp.json()
 
-_CAMEL_TO_SNAKE = {
-    "title": "title_filter",
-    "advancedTitle": "advanced_title_filter",
-    "description": "description_filter",
-    "location": "location_filter",
-}
-def _normalise_keys(d: dict[str, Any]) -> dict[str, Any]:
-    return {
-        _CAMEL_TO_SNAKE.get(k, k): v            # map if known, else keep
-        for k, v in d.items()
-    }
-
 def _call_adzuna(params: Mapping[str, Any]) -> dict:
     """
     Invoke Adzuna's `/v1/api/jobs/{country}/search/{page}` endpoint.
@@ -128,6 +112,18 @@ def _call_adzuna(params: Mapping[str, Any]) -> dict:
 
     resp.raise_for_status()
     return resp.json()
+
+_CAMEL_TO_SNAKE = {
+    "title": "title_filter",
+    "advancedTitle": "advanced_title_filter",
+    "description": "description_filter",
+    "location": "location_filter",
+}
+def _normalise_keys(d: dict[str, Any]) -> dict[str, Any]:
+    return {
+        _CAMEL_TO_SNAKE.get(k, k): v            # map if known, else keep
+        for k, v in d.items()
+    }
 
 def fetch_internships(params: Mapping[str, Any], resume_pdf: bytes | None = None) -> dict:
     params = _normalise_keys(dict(params))
