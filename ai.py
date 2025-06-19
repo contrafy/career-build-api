@@ -34,7 +34,7 @@ COMMON_HEADERS = {"x-rapidapi-key": RAPIDAPI_KEY}
 #  LLM prompts
 # --------------------------------------------------------------------------- #
 _FILTER_DOC = """
-You are an **API filter generator**.  
+You are an **Job API filter generator**.  
 Analyse the résumé and output **only** a JSON object using the keys below.
 
 Valid JSON keys  
@@ -131,7 +131,9 @@ def _rate_jobs_against_resume(jobs: list[dict], resume_text: str | None = None):
         "You are a career-match assistant.\n"
         "Rate each job 0.0-10.0 (exactly one decimal place, use whole values sparingly) for how well it fits the "
         "candidate's résumé.  Return ONLY a JSON object whose keys are the "
-        "job IDs and whose values are the ratings.  No other text."
+        "job IDs and whose values are the ratings.  No other text. When rating how well a certain job fits, ensure to place a heavy emphasis on making sure the amount of experience required is a match or close match to the experience that you"
+        " can gather from the resume, for instance someone with 1-2 years of experience would likely be a poor (<5) fit for a Senior level role, and vice versa for someone with 10-12 years of relevant experience against an entry level job listing."
+        " Be sure to also consider the relevance to their resume and specific skills that appear in both the resume and the posting/description."
     )
 
     user_parts = []
