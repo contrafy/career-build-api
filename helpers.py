@@ -1,73 +1,27 @@
-import json
-import os
 from io import BytesIO
 from typing import Any, Dict, Mapping
-import re
-import uuid
+import re, requests, PyPDF2
 
-import openai
-from groq import Groq
-
-import requests
-import PyPDF2
-from dotenv import load_dotenv
-
-from models import LLMGeneratedFilters
-
-# --------------------------------------------------------------------------- #
-#  ENV / CONSTANTS
-# --------------------------------------------------------------------------- #
-load_dotenv()
-RAPIDAPI_KEY = os.getenv("RAPIDAPI_KEY")
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-ADZUNA_APP_ID  = os.getenv("ADZUNA_APP_ID")
-ADZUNA_APP_KEY = os.getenv("ADZUNA_APP_KEY")
-if not (ADZUNA_APP_ID and ADZUNA_APP_KEY):
-    raise RuntimeError("ADZUNA_APP_ID / ADZUNA_APP_KEY missing in environment/.env")
-
-# Check for RapidAPI key and at least one LLM key
-if not RAPIDAPI_KEY:
-    raise RuntimeError("RAPIDAPI_KEY missing in environment/.env")
-if not (OPENAI_API_KEY or GROQ_API_KEY):
-    raise RuntimeError("OPENAI_API_KEY (or GROQ_API_KEY) missing in environment/.env")
-
-# Initialize OpenAI and Groq clients
-openai.api_key = OPENAI_API_KEY
-client = Groq(
-    api_key=os.environ.get("GROQ_API_KEY"),  # This is the default and can be omitted
-)
-
-COMMON_HEADERS = {"x-rapidapi-key": RAPIDAPI_KEY}
-
-# ─── global in‑mem store (top of file, after COMMON_HEADERS) ───────────────
-# RESUME_CACHE: dict[str, str] = {}     # resume_id → plaintext résumé
-
+import ai
 
 # --------------------------------------------------------------------------- #
 #  RapidAPI helpers
 # --------------------------------------------------------------------------- #
 
 def _sanitize_params(params: Mapping[str, Any]) -> Dict[str, str]:
-    ALLOWED_KEYS = {"advanced_title_filter", "location_filter", "limit", "title_only", "where", "distance", "page", "results_per_page", "country"}
+    ALLOWED_KEYS = {"advanced_title_filter", "title_only", "location_filter", "limit", "title_only", "where", "what", "distance", "page", "results_per_page", "country"}
 
     clean: Dict[str, str] = {}
 
-    # ── 1. basic filtering / stringification ───────────────────────────────
-    if not params.get("limit"):
-        clean["limit"] = "15" 
-
+    # filter out any non ALLOWED_KEYS
     for k, v in params.items():
         if k not in ALLOWED_KEYS:
             continue
         if v is None or v == "":
             continue
-        if isinstance(v, bool):
-            clean[k] = "true" if v else "false"
-        else:
-            clean[k] = str(v)
+        clean[k] = "true" if isinstance(v, bool) else str(v)
 
-    # ── 2. quote multi-word terms in advanced_title_filter ─────────────────
+    # quote multi-word terms in advanced_title_filter ─────────────────
     raw = clean.get("advanced_title_filter")
     if raw:
         # split on the '|' operator, trim whitespace around each token
@@ -94,8 +48,6 @@ def _extract_jobs_list(payload: object) -> list[dict]:
                 return payload[k]
     return []                                         # fallback
 
-_DELIMS = re.compile(r"(\(|\)|\||<->|!)")          # we keep these untouched
-
 def _map_adzuna(item: dict) -> dict:
     """
     Convert ONE raw Adzuna record → JobListing interface used in JobCard.tsx
@@ -114,30 +66,21 @@ def _map_adzuna(item: dict) -> dict:
         "url":          item.get("redirect_url"),
         "date_posted":  item.get("created"),                 # e.g. "2024-12-01T17:34:00Z"
         "date_created": item.get("created"),
-        # "rating" left out – LLM will add later
     }
 
 def _call_api(url: str, host: str, params: Mapping[str, Any]) -> dict:
-    headers = {**COMMON_HEADERS, "x-rapidapi-host": host}
+    headers = {**ai.COMMON_HEADERS, "x-rapidapi-host": host}
     
     query = _sanitize_params(params)
+    query["limit"] = 15
+
     print("\nQuery about to be sent: ", query, "\n")
+
     resp = requests.get(url, headers=headers, params=query, timeout=15)
     print("\nResponse from external API: ", resp, "\n")
+
     resp.raise_for_status()
     return resp.json()
-
-_CAMEL_TO_SNAKE = {
-    "title": "title_filter",
-    "advancedTitle": "advanced_title_filter",
-    "description": "description_filter",
-    "location": "location_filter",
-}
-def _normalise_keys(d: dict[str, Any]) -> dict[str, Any]:
-    return {
-        _CAMEL_TO_SNAKE.get(k, k): v            # map if known, else keep
-        for k, v in d.items()
-    }
 
 def _call_adzuna(params: Mapping[str, Any]) -> dict:
     """
@@ -157,15 +100,30 @@ def _call_adzuna(params: Mapping[str, Any]) -> dict:
 
     # ----------------------------- query params ---------------------------
     query             = _sanitize_params(params)
-    query["app_id"]   = ADZUNA_APP_ID
-    query["app_key"]  = ADZUNA_APP_KEY
+    query["app_id"]   = ai.ADZUNA_APP_ID
+    query["app_key"]  = ai.ADZUNA_APP_KEY
 
     # NB: Adzuna returns 403 if a User-Agent is not present.
     headers = {"User-Agent": "career-builder/1.0"}
+    print("\nQuery about to be sent: ", query, "\n")
 
     resp = requests.get(url, headers=headers, params=query, timeout=15)
+    print("\nResponse from external API: ", resp.json(), "\n")
+
     resp.raise_for_status()
     return resp.json()
+
+_CAMEL_TO_SNAKE = {
+    "title": "title_filter",
+    "advancedTitle": "advanced_title_filter",
+    "description": "description_filter",
+    "location": "location_filter",
+}
+def _normalise_keys(d: dict[str, Any]) -> dict[str, Any]:
+    return {
+        _CAMEL_TO_SNAKE.get(k, k): v            # map if known, else keep
+        for k, v in d.items()
+    }
 
 def fetch_internships(params: Mapping[str, Any], resume_pdf: bytes | None = None) -> dict:
     params = _normalise_keys(dict(params))
@@ -175,7 +133,7 @@ def fetch_internships(params: Mapping[str, Any], resume_pdf: bytes | None = None
         params,
     )
     resume_txt = _pdf_to_text(resume_pdf) if resume_pdf else None
-    _rate_jobs_against_resume(_extract_jobs_list(payload), resume_txt)
+    ai._rate_jobs_against_resume(_extract_jobs_list(payload), resume_txt)
     return payload
 
 
@@ -187,7 +145,7 @@ def fetch_jobs(params: Mapping[str, Any], resume_pdf: bytes | None = None) -> di
         params,
     )
     resume_txt = _pdf_to_text(resume_pdf) if resume_pdf else None
-    _rate_jobs_against_resume(_extract_jobs_list(payload), resume_txt)
+    ai._rate_jobs_against_resume(_extract_jobs_list(payload), resume_txt)
     return payload
 
 
@@ -199,33 +157,41 @@ def fetch_yc_jobs(params: Mapping[str, Any], resume_pdf: bytes | None = None) ->
         params,
     )
     resume_txt = _pdf_to_text(resume_pdf) if resume_pdf else None
-    _rate_jobs_against_resume(_extract_jobs_list(payload), resume_txt)
+    ai._rate_jobs_against_resume(_extract_jobs_list(payload), resume_txt)
     return payload
 
-def fetch_adzuna_jobs(filters: Mapping[str, Any]) -> dict:
+def fetch_adzuna_jobs(params: Mapping[str, Any], resume_pdf: bytes | None = None) -> dict:
+    params = _normalise_keys(dict(params))
     p: dict[str, Any] = {}
 
-    raw_title = filters.get("advanced_title_filter") or filters.get("title_filter") or ""
+    # ───────────────────────────── helpers ────────────────────────────────
+    # convert → int or fall back to a sane default; treats None / '' the same
+    _i = lambda v, d: int(v) if isinstance(v, (int, str)) else d
+
+    # extract title params
+    raw_title = params.get("advanced_title_filter") or params.get("title_filter") or ""
     if raw_title:
         cleaned = re.sub(r"[()']", "", str(raw_title)).replace("|", " ").strip()
         if cleaned:
             p["title_only"] = cleaned
 
-    raw_loc = (filters.get("location_filter") or "").strip()
+    # extract location params
+    raw_loc = (params.get("location_filter") or "").strip()
     if raw_loc:
         p["where"] = raw_loc.split(" OR ", 1)[0].strip()
 
-    try:
-        p["distance"] = int(filters.get("distance", 50))
-    except ValueError:
-        p["distance"] = 50
-
-    limit = int(filters.get("limit", 50))    
-    p["results_per_page"] = limit            
-    p["page"] = 1                            
+    # set defaults
+    p["distance"]         = _i(params.get("distance"), 50)
+    p["results_per_page"] = _i(params.get("limit"), 50) 
+    p["page"]             = _i(params.get("page"), 1)
+    p["country"]          = (params.get("country") or "us").lower()                         
 
     raw = _call_adzuna(p)
     mapped = [_map_adzuna(r) for r in raw.get("results", [])]
+
+    resume_txt = _pdf_to_text(resume_pdf) if resume_pdf else None
+    ai._rate_jobs_against_resume(mapped, resume_txt)
+
     return {"results": mapped}
 
 
@@ -237,145 +203,3 @@ def _pdf_to_text(pdf_bytes: bytes) -> str:
     reader = PyPDF2.PdfReader(BytesIO(pdf_bytes))
     pages = [p.extract_text() or "" for p in reader.pages]
     return "\n".join(pages)
-
-
-# --------------------------------------------------------------------------- #
-#  LLM prompts
-# --------------------------------------------------------------------------- #
-_FILTER_DOC = """
-You are an **API filter generator**.  
-Analyse the résumé and output **only** a JSON object using the keys below.
-
-Valid JSON keys  
-    advanced_title_filter    ← a single comma-separated string of relevant titles/skills  
-    location_filter          ← a single comma-separated string of relevant locations
-
-──────────────────────────────────────────────────────────────────────────────
-advanced_title_filter  (STRING - comma-separated)
-──────────────────────────────────────────────────────────────────────────────
-• Extract relevant titles, skills, and technologies from the résumé.
-• Return them as **one comma-separated list**, e.g.  
-  `Systems Administrator, Linux Administrator, DevOps Engineer, C++, Python`
-
-• DO NOT wrap terms in quotes.
-• Maximize breadth while staying relevant to the candidate's skills.
-• Include both specific and general forms (e.g., "Kubernetes", "Cloud Engineer").
-
-──────────────────────────────────────────────────────────────────────────────
-location_filter  (STRING - comma-separated)
-──────────────────────────────────────────────────────────────────────────────
-• Use full names only (“United States”, “New York”, “United Kingdom”).  
-• Combine multiple locations with **commas**, e.g.  
-  `United States, Canada, Netherlands`
-• Prefer state or city granularity unless broader openness is stated.
-
-──────────────────────────────────────────────────────────────────────────────
-OUTPUT  (STRICT)
-──────────────────────────────────────────────────────────────────────────────
-{"advanced_title_filter": "...", "location_filter": "..."}
-"""
-
-def _build_resume_prompt(resume_text: str) -> str:
-    return (
-    _FILTER_DOC
-    + "\n---\nRESUME:\n"
-    + resume_text[:7000] # protect token budget
-    + "\n---\nGenerate JSON now:"
-    )
-
-# ---------------------------------------------------------------------------
-# Public: generate filters with OpenAI
-# ---------------------------------------------------------------------------
-
-def generate_filters_from_resume(pdf_bytes: bytes) -> LLMGeneratedFilters:
-    # Convert PDF resume to text for LLM ingestion
-    resume_text = _pdf_to_text(pdf_bytes)
-
-
-    # Use Groq to generate filters
-    response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=[
-            {"role": "system", "content": "You are a helpful job hunting assistant, the goal is to maximize the breadth of jobs that the user can and should apply to, "
-                                          "while also giving them the jobs they are most likely to desire and do well at from the information available to you."},
-            {"role": "user", "content": _build_resume_prompt(resume_text)},
-        ],
-        temperature=0.2,
-        response_format={"type": "json_object"}
-    )
-    content = response.choices[0].message.content.strip()
-    print("LLM response:", content)  # <-- for debugging
-    if not content:
-        raise ValueError("Empty response from LLM")
-
-    # Ensure pure JSON
-    json_str = content.split("```json")[-1].split("```")[0] if "```" in content else content
-
-    # Groq occasionally emits un‑escaped \n / \r inside string literals.
-    # json.loads(strict=False) tolerates those; if it still fails, strip them.
-    try:
-        raw_filters = json.loads(json_str, strict=False)
-    except json.JSONDecodeError:
-        cleaned = json_str.replace("\r", " ").replace("\n", " ")
-        raw_filters = json.loads(cleaned, strict=False)
-
-
-    # Validate and return only the two flat filters needed by the UI
-    return LLMGeneratedFilters(**raw_filters).dict(exclude_none=True)
-
-# --------------------------------------------------------------------------- #
-# ❷  call an LLM to score every job 0.0‑10.0 and print the result
-# --------------------------------------------------------------------------- #
-def _rate_jobs_against_resume(jobs: list[dict], resume_text: str | None = None):
-    if not jobs:                                     # nothing to do
-        print("\nno jobs?\n")
-        return
-
-    # keep only fields that help the LLM
-    shortlist = [
-        {
-            "id": j.get("id"),
-            "date_posted": j.get("date_posted"),
-            "title": j.get("title"),
-            "organization": j.get("organization"),
-            "description_text": j.get("description_text"),
-        }
-        for j in jobs
-    ]
-
-    system_msg = (
-        "You are a career-match assistant.\n"
-        "Rate each job 0.0-10.0 (exactly one decimal place) for how well it fits the "
-        "candidate's résumé.  Return ONLY a JSON object whose keys are the "
-        "job IDs and whose values are the ratings.  No other text."
-    )
-
-    user_parts = []
-    if resume_text:
-        # print("resume_text:", resume_text[:8000])
-        user_parts.append("Résumé:\n" + resume_text[:8000])
-    user_parts.append("Job listings JSON:\n" + json.dumps(shortlist, ensure_ascii=False))
-    user_msg = "\n\n".join(user_parts)
-
-    try:
-        resp = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
-            messages=[
-                {"role": "system", "content": system_msg},
-                {"role": "user",    "content": user_msg},
-            ],
-            temperature=0.5,
-        )
-        raw = resp.choices[0].message.content.strip()
-        json_str = raw.split("```json")[-1].split("```")[0] if "```" in raw else raw
-        ratings = json.loads(json_str)
-
-        # ---------- attach ratings to each listing ----------
-        for j in jobs:
-            jid = j.get("id")
-            if jid and jid in ratings:
-                j["rating"] = float(ratings[jid])
-
-        print("Job-fit ratings:", ratings)           # <-- for now just log
-    except Exception as e:
-        print("rating LLM call failed:", e)
